@@ -6,6 +6,17 @@ Ett alternativt projekt – ett server-renderat bokningssystem för resurser
 (t.ex. virtuella maskiner i Proxmox), byggt med Express och SQLite. Under
 kursens gång byggs det om/refaktoreras.
 
+## Krav
+
+> **OBS: Kräver Node.js 22.23 eller högre.**
+> `better-sqlite3` använder nativa binärer kompilerade för en specifik Node-version — äldre 22.x (t.ex. 22.11) ger `Segmentation fault` vid start.
+>
+> Uppgradera med nvm:
+> ```bash
+> nvm install 22.23
+> nvm use 22.23
+> ```
+
 ## Kom igång
 
 ```bash
