@@ -48,11 +48,6 @@ app.get('/resources/:id/edit', async (req, res) => {
     });
 });
 
-app.put('/resources/:id', async (req, res) => {
-    const result = await resources.updateOne(req.params.id, req.body);
-    return res.json(result);
-});
-
 app.delete('/resources/:id', async (req, res) => {
     const result = await resources.deleteOne(req.params.id);
     return res.json(result);
@@ -63,11 +58,6 @@ app.delete('/resources/:id', async (req, res) => {
 app.post('/bookings', async (req, res) => {
     await bookings.addOne(req.body);
     return res.redirect(`/resources/${req.body.resource_id}`);
-});
-
-app.put('/bookings/:id', async (req, res) => {
-    const result = await bookings.updateOne(req.params.id, req.body);
-    return res.json(result);
 });
 
 app.delete('/bookings/:id', async (req, res) => {

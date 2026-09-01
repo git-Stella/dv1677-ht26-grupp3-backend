@@ -12,12 +12,6 @@ const bookings = {
         ).run(body.resource_id, body.user, body.start_time, body.end_time, 'confirmed');
         return { lastID: result.lastInsertRowid };
     },
-    updateOne: async function updateOne(id, body) {
-        const result = db.prepare(
-            'UPDATE bookings SET user = ?, start_time = ?, end_time = ?, status = ? WHERE id = ?'
-        ).run(body.user, body.start_time, body.end_time, body.status, id);
-        return { changes: result.changes };
-    },
     deleteOne: async function deleteOne(id) {
         const result = db.prepare('DELETE FROM bookings WHERE id = ?').run(id);
         return { changes: result.changes };
