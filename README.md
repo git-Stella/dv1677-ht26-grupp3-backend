@@ -8,7 +8,7 @@ kursens gång byggs det om/refaktoreras.
 
 ---
 
-# dv1677-ht26-grupp3-backend
+# dv1677-ht26
 
 ## Gruppmedlemmar
 
