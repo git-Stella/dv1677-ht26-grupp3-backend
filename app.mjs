@@ -24,11 +24,20 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.get('/', async (req, res) => {
     //return res.render("index", { resources: await resources.getAll() });
-    const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
-    return res.json({intro: introduction, resources: await resources.getAll()});
+    //const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
+    return res.json({resources: await resources.getAll()});
 });
 
-app.get('/resources/new', async (req, res) => {
+app.get('/info', async (req, res) => {
+    const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
+    return res.json(introduction)
+});
+
+app.get('/deprecated', async (req, res) => {
+    return res.render("index", { resources: await resources.getAll() });
+});
+
+app.get('/deprecated/resources/new', async (req, res) => {
     return res.render("resource-form", { resource: {} });
 });
 
@@ -40,11 +49,11 @@ app.post('/resources', async (req, res) => {
 app.get('/resources/:id', async (req, res) => {
     const resource = await resources.getOne(req.params.id);
     const resourceBookings = await bookings.getByResource(req.params.id);
-
-    return res.render("resource", { resource, bookings: resourceBookings });
+    return res.json({bookings: resourceBookings, resources: resource})
+    //return res.render("resource", { resource, bookings: resourceBookings });
 });
 
-app.get('/resources/:id/edit', async (req, res) => {
+app.get('/deprecated/resources/:id/edit', async (req, res) => {
     return res.render("resource-form", {
         resource: await resources.getOne(req.params.id)
     });
