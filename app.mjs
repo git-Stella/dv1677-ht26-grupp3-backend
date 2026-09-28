@@ -23,7 +23,9 @@ if (process.env.NODE_ENV !== 'test') {
 // --- Resurser ---
 
 app.get('/', async (req, res) => {
-    return res.render("index", { resources: await resources.getAll() });
+    //return res.render("index", { resources: await resources.getAll() });
+    const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
+    return res.json({intro: introduction, resources: await resources.getAll()});
 });
 
 app.get('/resources/new', async (req, res) => {
