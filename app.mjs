@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
+import routes from "./routes.js";
 
 const port = process.env.PORT;
 const app = express();
@@ -15,14 +16,21 @@ app.use(express.static(path.join(process.cwd(), "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use('/api', routes);
 
 if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined'));
 }
 
+app.get('/', async (req, res) => {
+    //return res.render("index", { resources: await resources.getAll() });
+    //const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
+    return res.json({resources: "They are not here"});
+});
+
 // --- Resurser ---
 
-app.get('/', async (req, res) => {
+/*app.get('/', async (req, res) => {
     //return res.render("index", { resources: await resources.getAll() });
     //const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
     return res.json({resources: await resources.getAll()});
@@ -74,8 +82,10 @@ app.post('/bookings', async (req, res) => {
 app.delete('/bookings/:id', async (req, res) => {
     const result = await bookings.deleteOne(req.params.id);
     return res.json(result);
-});
+});*/
 
-app.listen(port, () => {
+/*app.listen(port, () => {
     console.log(`Proxmox Booking app listening on port ${port}`);
-});
+});*/
+
+export default app;
