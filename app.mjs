@@ -1,70 +1,80 @@
-import 'dotenv/config';
-import express from 'express';
-import path from 'path';
-import morgan from 'morgan';
-import cors from 'cors';
-import resources from "./resources.mjs";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { testDatabase, db } from './db/database.mjs';
 import bookings from "./bookings.mjs";
+import resources from "./resources.mjs";
 
-const port = process.env.PORT;
+dotenv.config()
+
 const app = express();
-
-app.disable('x-powered-by');
-app.set("view engine", "ejs");
-app.use(express.static(path.join(process.cwd(), "public")));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.json());
 
-if (process.env.NODE_ENV !== 'test') {
-    app.use(morgan('combined'));
-}
+const port = process.env.PORT || 3000;
 
-// --- Resurser ---
+// Route 1 - get all resources
 
 app.get('/', async (req, res) => {
-    return res.render("index", { resources: await resources.getAll() });
+    return res.json({resources: await resources.getAll()});
 });
 
-app.get('/resources/new', async (req, res) => {
-    return res.render("resource-form", { resource: {} });
-});
+// Route 2 - add new resource to resources collection
+
+// Behöver formulär?
+// app.get('/resources/new', async (req, res) => {
+//     // return res.render("resource-form", { resource: {} });
+//     db.collection(dbNameBookings).find({}).toArray();
+//     return res.redirect('/');
+// });
 
 app.post('/resources', async (req, res) => {
     await resources.addOne(req.body);
     return res.redirect('/');
 });
 
-app.get('/resources/:id', async (req, res) => {
-    const resource = await resources.getOne(req.params.id);
-    const resourceBookings = await bookings.getByResource(req.params.id);
+// Route 3 - look for resource and booking matching resourse_id
 
-    return res.render("resource", { resource, bookings: resourceBookings });
+app.get('/api/resources/:id', async (req, res) => {
+    try {
+        const resource = await resources.getOne(req.params.id);
+        const resourceBookings = await bookings.getByResource(req.params.id);
+        res.json({"resource": { resource, bookings: resourceBookings }});
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-app.get('/resources/:id/edit', async (req, res) => {
-    return res.render("resource-form", {
-        resource: await resources.getOne(req.params.id)
-    });
-});
+// Route 4 - change an existing document
+
+// Behöver formulär?
+// app.get('/resources/:id/edit', async (req, res) => {
+//     return res.render("resource-form", {
+//         resource: await resources.getOne(req.params.id)
+//     });
+// });
+
+// Route 5 - delete an existing resource document
 
 app.delete('/resources/:id', async (req, res) => {
     const result = await resources.deleteOne(req.params.id);
-    return res.json(result);
+    res.json(result);
 });
 
 // --- Bokningar ---
 
 app.post('/bookings', async (req, res) => {
     await bookings.addOne(req.body);
-    return res.redirect(`/resources/${req.body.resource_id}`);
+    res.redirect(`/resources/${req.body.resource_id}`);
 });
 
 app.delete('/bookings/:id', async (req, res) => {
     const result = await bookings.deleteOne(req.params.id);
-    return res.json(result);
+    res.json(result);
 });
 
+testDatabase();
+
 app.listen(port, () => {
-    console.log(`Proxmox Booking app listening on port ${port}`);
+    console.log(`The server is running on: localhost:${port}`);
 });

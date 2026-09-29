@@ -2,24 +2,25 @@ services:
     backend:
         build: .
         ports:
-            - "${PORT:-3000}:3000"
+          - "${PORT:-3000}:3000"
+        env_file:
+          - .env
         environment:
-            PORT: 3000
-            MONGODB_URI: mongodb://root:secret@mongodb:27017/
-            DATABASE_NAME: jsramverk
-        depends_on:
-            - mongodb
-        restart: unless-stopped
+          - MONGODB_URI=${MONGODB_URI}
+          - PORT=3000
+        restart: always
 
-    mongodb:
-        image: mongo:latest
-        ports:
-            - "27017:27017"
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: secret
-        volumes:
-            - mongodbdata:/data/db
+    # mongodb:
+    #     image: mongo:latest
+    #     container_name: mongodb
+    #     ports:
+    #         - "27017:27017"
+    #     environment:
+    #         MONGO_INITDB_ROOT_USERNAME: root
+    #         MONGO_INITDB_ROOT_PASSWORD: secret
+    #     volumes:
+    #         - mongodb_data:/data/db
+    #     restart: always
 
-volumes:
-    mongodbdata:
+# volumes:
+#     mongodb_data:
