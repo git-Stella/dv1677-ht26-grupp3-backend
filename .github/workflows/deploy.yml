@@ -52,6 +52,10 @@ jobs:
           script: |
             cd ~/dv1677-ht26-grupp3-backend
 
+            # Skriv .env-fil med secrets — läses av docker compose vid uppstart
+            # MONGODB_URI: sätt till Atlas-sträng eller mongodb://mongodb:27017 för container
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
+
             docker compose pull
             docker compose down
             docker compose up -d

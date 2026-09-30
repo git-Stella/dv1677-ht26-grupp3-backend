@@ -53,7 +53,10 @@ npm start
 | Variabel | Beskrivning |
 |----------|-------------|
 | MONGODB_URI | Anslutningssträng till MongoDB |
-| PORT | Port (default 1337) |
+| DATABASE_NAME | Namnet på databasen som MongoDB använder |
+| COLLECTION_NAME_BOOKINGS | Namnet på collection:en som tillhör "bookings" |
+| COLLECTION_NAME_RESOURCES | Namnet på collection:en som tillhör "resources" |
+| PORT | Port (default 3000) |
 
 ## Tester
 

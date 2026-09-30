@@ -1,21 +1,39 @@
-import db from './db/database.mjs';
+import { db } from './db/database.mjs';
+import { BSON } from 'mongodb';
+
+const dbNameResources = process.env.COLLECTION_NAME_RESOURCES;
 
 const resources = {
     getAll: async function getAll() {
-        return db.prepare('SELECT * FROM resources').all();
+        const res = await db.collection(dbNameResources).find({}).toArray();
+
+        return res;
     },
     getOne: async function getOne(id) {
-        return db.prepare('SELECT * FROM resources WHERE id = ?').get(id) || {};
+        const nid = new BSON.ObjectId(id);
+        const res = await db.collection(dbNameResources).find({ _id: nid }).toArray();
+
+        return res;
     },
     addOne: async function addOne(body) {
-        const result = db.prepare(
-            'INSERT INTO resources (name, type, description, capacity) VALUES (?, ?, ?, ?)'
-        ).run(body.name, body.type, body.description, body.capacity || 1);
-        return { lastID: result.lastInsertRowid };
+        const newItem = {
+            name: body.name,
+            type: body.type,
+            description: body.description,
+            capacity: Number(body.capacity) || 1
+        };
+    
+        db.collection(dbNameResources).insertOne(newItem);
+
+        const res = await db.collection(dbNameResources).find().sort({_id:-1});
+
+        return res;
     },
     deleteOne: async function deleteOne(id) {
-        const result = db.prepare('DELETE FROM resources WHERE id = ?').run(id);
-        return { changes: result.changes };
+        const nid = new BSON.ObjectId(id);
+        const res = await db.collection(dbNameResources).deleteOne({ _id: nid });
+
+        return { changes: res.deletedCount };
     }
 };
 
