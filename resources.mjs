@@ -6,7 +6,6 @@ const dbNameResources = process.env.COLLECTION_NAME_RESOURCES;
 const resources = {
     getAll: async function getAll() {
         const res = await db.collection(dbNameResources).find({}).toArray();
-
         return res;
     },
     getOne: async function getOne(id) {
