@@ -3,9 +3,6 @@ on:
   push:
     branches: [main, dev]
 jobs:
-  permissions:
-    contents: read
-    packages: write
   test:
     runs-on: ubuntu-latest
     steps:
@@ -20,6 +17,9 @@ jobs:
       - run: npm test
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     #needs: test
     steps:
       - uses: actions/checkout@v4
