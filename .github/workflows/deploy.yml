@@ -4,8 +4,8 @@ on:
     branches: [main, dev]
 jobs:
   permissions:
-  contents: read
-  packages: write
+    contents: read
+    packages: write
   test:
     runs-on: ubuntu-latest
     steps:
