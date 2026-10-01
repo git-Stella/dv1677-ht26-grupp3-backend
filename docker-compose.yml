@@ -1,6 +1,6 @@
 services:
     backend:
-        build: .
+        image: ghcr.io/git-stella/dv1677-ht26-grupp3-backend:latest
         ports:
           - "${PORT:-3000}:3000"
         env_file:
