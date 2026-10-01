@@ -9,7 +9,9 @@ services:
             PORT: 3000
             #MONGODB_URI: mongodb://root:secret@mongodb:27017/
             MONGODB_URI: ${MONGODB_URI:-mongodb://mongodb:27017}
-            DATABASE_NAME: jsramverk
+            DATABASE_NAME: booking_project
+            COLLECTION_NAME_BOOKINGS: booking_project_collection_bookings
+            COLLECTION_NAME_RESOURCES: booking_project_collection_resources
         #depends_on:
         #    - mongodb
         #restart: unless-stopped
