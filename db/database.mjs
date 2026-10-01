@@ -16,8 +16,12 @@ let db;
 
 async function testDatabase() {
     try {
+        //console.log(client)
+        //console.log("connect")
         await client.connect();
+        //console.log("name")
         db = client.db(dbName);
+        //console.log(db);
         const resourcesItems = await db.collection(dbNameResources).find({}).toArray();
         const bookingsItems = await db.collection(dbNameBookings).find({}).toArray();
 

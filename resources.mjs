@@ -11,7 +11,7 @@ const resources = {
     },
     getOne: async function getOne(id) {
         const nid = new BSON.ObjectId(id);
-        const res = await db.collection(dbNameResources).find({ _id: nid }).toArray();
+        const res = await db.collection(dbNameResources).find(/*{ name: id }*/{ _id: nid }).toArray();
 
         return res;
     },
