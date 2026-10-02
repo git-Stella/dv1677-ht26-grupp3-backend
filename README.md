@@ -62,7 +62,7 @@ npm start
 
 npm test
 
-Kör tester på 
+Kör tester på t
 
 ## Teknikstack
 
