@@ -62,6 +62,8 @@ npm start
 
 npm test
 
+Kör tester på 
+
 ## Teknikstack
 
 - [Node](https://nodejs.org)
