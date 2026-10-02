@@ -8,19 +8,41 @@ if (!existsSync('./db')) {
 
 dotenv.config();
 
-const client = new MongoClient(process.env.MONGODB_URI);
+let client = null;
+// const client = new MongoClient(process.env.MONGODB_URI);
 const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS;
 const dbNameResources = process.env.COLLECTION_NAME_RESOURCES;
 const dbName = process.env.DATABASE_NAME;
 let db;
 
+async function getClient() {
+    if (!client) {
+        client = new MongoClient(process.env.MONGODB_URI);
+        await client.connect();
+    }
+    return client;
+}
+
+async function connectDB() {
+  const c = await getClient();
+  return c.db(process.env.DATABASE_NAME);
+};
+
+async function closeDB() {
+  if (client) {
+    await client.close();
+    client = null;
+  }
+};
+
 async function testDatabase() {
     try {
         //console.log(client)
         //console.log("connect")
-        await client.connect();
+        // await client.connect();
+        const newClient = await getClient();
         //console.log("name")
-        db = client.db(dbName);
+        db = newClient.db(dbName);
         //console.log(db);
         const resourcesItems = await db.collection(dbNameResources).find({}).toArray();
         const bookingsItems = await db.collection(dbNameBookings).find({}).toArray();
@@ -45,4 +67,4 @@ async function testDatabase() {
     }
 }
 
-export { testDatabase, db };
+export { testDatabase, db, getClient, closeDB, connectDB };

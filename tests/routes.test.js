@@ -20,7 +20,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  //await closeDB()
+  await closeDB()
   await mongod.stop()
 });
 
