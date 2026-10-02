@@ -52,14 +52,14 @@ async function testDatabase() {
             bulk.insert( {name: "VM-01", type: "vm", description: "Ubuntu 24.04 – 4 vCPU, 8 GB RAM", capacity: 1} );
             bulk.insert( {name: "VM-02", type: "vm", description: "Debian 12 – 2 vCPU, 4 GB RAM", capacity: 1} );
             bulk.insert( {name: "GPU-server-1", type: "gpu", description: "NVIDIA T4 – för ML-arbetsbelastningar", capacity: 1} );
-            bulk.execute();
+            await bulk.execute();
         }
 
         if (bookingsItems.length == 0) {
             let bulk = db.collection(dbNameBookings).initializeOrderedBulkOp();
             bulk.insert( {resource_id: 1, user: "anna@student.bth.se", start_time: "2026-09-15 08:00", end_time: "2026-09-15 12:00", status: "confirmed"} );
             bulk.insert( {resource_id: 2, user: "erik@student.bth.se", start_time: "2026-09-15 13:00", end_time: "2026-09-15 17:00", status: "confirmed"} );
-            bulk.execute();
+            await bulk.execute();
         }
     } catch (e) {
         console.error("Error occured: ", e);
