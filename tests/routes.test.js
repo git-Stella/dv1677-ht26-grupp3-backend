@@ -2,15 +2,19 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { readFileSync } from 'fs'
 import request from 'supertest'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import app from '../app.mjs'
+// import app from '../app.mjs'
 import { connectDB, closeDB, testDatabase } from '../db/database.mjs'
 
-let mongod
+let mongod;
+let app;
 
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create()
-  process.env.MONGODB_URI = mongod.getUri()
-  process.env.DATABASE_NAME = 'jsramverk_test'
+  mongod = await MongoMemoryServer.create();
+  process.env.MONGODB_URI = mongod.getUri();
+  process.env.DATABASE_NAME = 'jsramverk_test';
+
+  const importApp = await import("../app.mjs");
+  app = importApp.default;
 
   // Seed med kursdata så att testerna har något att arbeta med
   //const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'))
@@ -20,7 +24,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  //await closeDB()
+  await closeDB()
   await mongod.stop()
 });
 
