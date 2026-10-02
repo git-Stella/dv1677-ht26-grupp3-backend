@@ -1,7 +1,7 @@
 import { db } from './db/database.mjs';
 import { BSON } from 'mongodb';
 
-const dbNameResources = process.env.COLLECTION_NAME_RESOURCES;
+const dbNameResources = process.env.COLLECTION_NAME_RESOURCES || "booking_project_collection_bookings";
 
 const bookings = {
     getByResource: async function getByResource(resourceId) {

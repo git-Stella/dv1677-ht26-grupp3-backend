@@ -25,7 +25,7 @@ async function getClient() {
 
 async function connectDB() {
   const c = await getClient();
-  return c.db(process.env.DATABASE_NAME);
+  return c.db(dbName);
 };
 
 async function closeDB() {
