@@ -8,9 +8,9 @@ import { connectDB, closeDB, testDatabase } from '../db/database.mjs'
 let mongod
 
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create()
-  process.env.MONGODB_URI = mongod.getUri()
-  process.env.DATABASE_NAME = 'jsramverk_test'
+  //mongod = await MongoMemoryServer.create()
+  //process.env.MONGODB_URI = mongod.getUri()
+  //process.env.DATABASE_NAME = 'jsramverk_test'
 
   // Seed med kursdata så att testerna har något att arbeta med
   //const courses = JSON.parse(readFileSync('./courses.json', 'utf-8'))
@@ -21,7 +21,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   //await closeDB()
-  await mongod.stop()
+  //await mongod.stop()
 });
 
 describe('GET /api', () => {

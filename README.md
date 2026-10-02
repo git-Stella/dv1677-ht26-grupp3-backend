@@ -11,7 +11,7 @@ kursens gång byggs det om/refaktoreras.
 # dv1677-ht26-grupp3-backend
 
 ## Gruppmedlemmar
-//y
+//yy
 | Namn | GitHub |
 |------|--------|
 | Stella Karlsson | @git-Stella |
@@ -61,6 +61,8 @@ npm start
 ## Tester
 
 npm test
+
+Kör tester på t
 
 ## Teknikstack
 
