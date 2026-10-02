@@ -28,8 +28,9 @@ router.get('/deprecated/resources/new', async (req, res) => {
 });
 
 router.post('/resources', async (req, res) => {
-    await resources.addOne(req.body);
-    return res.redirect('/');
+    const result = await resources.addOne(req.body);
+    return res.json({result: result});
+    //return res.redirect('/api');
 });
 
 router.get('/resources/:id', async (req, res) => {
@@ -47,7 +48,8 @@ router.get('/deprecated/resources/:id/edit', async (req, res) => {
 
 router.delete('/resources/:id', async (req, res) => {
     const result = await resources.deleteOne(req.params.id);
-    return res.json(result);
+    return res.json({result: result});
+    //return res.redirect('/api');
 });
 
 // --- Bokningar ---

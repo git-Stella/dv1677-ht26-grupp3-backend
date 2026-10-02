@@ -20,7 +20,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    #needs: test
+    needs: test
     steps:
       - uses: actions/checkout@v4
 
