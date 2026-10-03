@@ -60,8 +60,11 @@ npm start
 | PORT | Port (default 3000) |
 
 ## Tester
-
 npm test
+GET route på /api (visar alla resources) testas för att se om du kan få en överblick på alla resources som finns.
+POST route på /api/resources för att se till att det går att lägga till nya resources.
+DELETE route på /api/resources/:id för att kunna visa att det går att ta bort en specifik resource.
+Dessa tester visar att bas funktionalitet för att api interagerar med databasen fungerar vilket är en viktig bas för projektet.
 
 ## Teknikstack
 
