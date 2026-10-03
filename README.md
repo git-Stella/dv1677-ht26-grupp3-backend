@@ -11,7 +11,7 @@ kursens gång byggs det om/refaktoreras.
 # dv1677-ht26-grupp3-backend
 
 ## Gruppmedlemmar
-//y
+
 | Namn | GitHub |
 |------|--------|
 | Stella Karlsson | @git-Stella |
@@ -44,8 +44,9 @@ Motivering: Vi valde frontend-ramverket "React", då vi båda har haft mer erfar
 
 git clone <repo-url>
 cd dv1677-ht26-grupp3-backend
-cp .env.example .env
+cp .env.example .env (fyll i värden till vad ni har)
 npm install
+npm audit fix (rekomenderas)
 npm start
 
 **Miljövariabler** (se .env.example):
@@ -69,11 +70,16 @@ npm test
 - [SQLite](https://www.sqlite.org) (byts ut mot MongoDB)
 - [EJS](https://ejs.co) (byts ut mot frontend-ramverk)
 
+## Länk till api och frontend
+https://dv1677-worf.nplab.bth.se/api
+
+
 ## Tillvägagångssätt
 
 Dokumentera löpande vad ni gjort och hur ni löst problem.
 
 - **Vecka 1:** Inlämningen för vecka utfördes genom att gruppmedlemmarna samlades under programmeringsstugan och diskuterade project- samt teknikval (frontend-ramverk), skapade ett gemensamt repo och bjöd med läraren, samt gick igenom stegen för säkerhetsgranskning, verifierade att uppdatering av befintligt innehåll fungerade korrekt, och slutligen skapade ett öppet pull request.
 
-- **Vecka 2:** ...
-- **Vecka 3:** ...
+- **Vecka 5:** Det har varit större problem under denna perioden på grund av en del teknik fel och mycket felsökande har gjorts men det har lett till bra resultat endå, trots lite försenat mot våra planer. Vi använder oss av atlas för våran mongodb databas och vi har nyttjat oss av mongo memory server för testerna.
+
+- **Vecka x:** ...
