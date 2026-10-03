@@ -72,7 +72,7 @@ npm test
 
 ## Länk till api och frontend
 https://dv1677-worf.nplab.bth.se/api
-
+https://andidupa.github.io/dv1677-ht26-grupp3-frontend/
 
 ## Tillvägagångssätt
 
