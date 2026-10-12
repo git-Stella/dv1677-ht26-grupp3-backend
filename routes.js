@@ -26,6 +26,7 @@ router.get('/', async (req, res) => {
 
   res.status(201).json({ _id: result.insertedId });
 });*/
+//req.io?.to(rum).emit('booking:created', data);
 
 router.get('/info', async (req, res) => {
     const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
@@ -54,8 +55,9 @@ router.delete('/resources/:id', async (req, res) => {
 // --- Bokningar ---
 
 router.post('/bookings', async (req, res) => {
-    await bookings.addOne(req.body);
-    return res.redirect(`/resources/${req.body.resource_id}`);
+    const result = await bookings.addOne(req.body);
+    //return res.redirect(`/resources/${req.body.resource_id}`);
+    return res.json({result: result});
 });
 
 router.delete('/bookings/:id', async (req, res) => {

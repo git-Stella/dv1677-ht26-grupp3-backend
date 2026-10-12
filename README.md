@@ -3,8 +3,7 @@
 Starter-repo för DV1677 JavaScript-baserade webbramverk HT26.
 
 Ett alternativt projekt – ett server-renderat bokningssystem för resurser
-(t.ex. virtuella maskiner i Proxmox), byggt med Express och SQLite. Under
-kursens gång byggs det om/refaktoreras.
+(t.ex. virtuella maskiner i Proxmox), byggt med Express och MongoDB via en atlas server. Frontend byggs i separat repo med react.
 
 ---
 
