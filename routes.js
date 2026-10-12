@@ -14,17 +14,22 @@ router.get('/', async (req, res) => {
     return res.json({resources: await resources.getAll()});
 });
 
+/*router.post('/bookings', async (req, res) => {
+  const db = await connectDB();
+  const result = await db.collection('bookings').insertOne(req.body);
+
+  // Skicka till alla som tittar på den här resursen
+  req.io.to(`resource:${req.body.resource_id}`).emit('booking:created', {
+    _id: result.insertedId,
+    ...req.body
+  });
+
+  res.status(201).json({ _id: result.insertedId });
+});*/
+
 router.get('/info', async (req, res) => {
     const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
     return res.json(introduction)
-});
-
-router.get('/deprecated', async (req, res) => {
-    return res.render("index", { resources: await resources.getAll() });
-});
-
-router.get('/deprecated/resources/new', async (req, res) => {
-    return res.render("resource-form", { resource: {} });
 });
 
 router.post('/resources', async (req, res) => {
@@ -38,12 +43,6 @@ router.get('/resources/:id', async (req, res) => {
     const resourceBookings = await bookings.getByResource(req.params.id);
     return res.json({bookings: resourceBookings, resources: resource})
     //return res.render("resource", { resource, bookings: resourceBookings });
-});
-
-router.get('/deprecated/resources/:id/edit', async (req, res) => {
-    return res.render("resource-form", {
-        resource: await resources.getOne(req.params.id)
-    });
 });
 
 router.delete('/resources/:id', async (req, res) => {

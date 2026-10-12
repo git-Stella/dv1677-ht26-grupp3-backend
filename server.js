@@ -12,6 +12,8 @@ const io = new Server(httpServer, {
   cors: { origin: '*' }        // ← Socket.io har EGEN cors-konfiguration
 });
 
+app.set('io', io);        // ← gör io åtkomlig för middlewaren i app.js
+
 io.on('connection', (socket) => {
   console.log('ansluten:', socket.id);
 
