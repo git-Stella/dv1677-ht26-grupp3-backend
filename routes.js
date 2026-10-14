@@ -52,6 +52,11 @@ router.delete('/resources/:id', async (req, res) => {
     //return res.redirect('/api');
 });
 
+router.put('resources', async (req, res) => {
+    const result = await resources.updateOne(req.body);
+    return res.json({result: result});
+});
+
 // --- Bokningar ---
 
 router.post('/bookings', async (req, res) => {
@@ -63,6 +68,11 @@ router.post('/bookings', async (req, res) => {
 router.delete('/bookings/:id', async (req, res) => {
     const result = await bookings.deleteOne(req.params.id);
     return res.json(result);
+});
+
+router.put('bookings', async (req, res) => {
+    const result = await bookings.updateOne(req.body);
+    return res.json({result: result});
 });
 
 export default router;
