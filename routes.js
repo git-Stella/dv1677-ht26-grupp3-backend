@@ -62,8 +62,19 @@ router.put('resources', async (req, res) => {
 router.post('/bookings', async (req, res) => {
     const result = await bookings.addOne(req.body);
     //return res.redirect(`/resources/${req.body.resource_id}`);
+    req.io?.to(`resource:${data.resource_id}`).emit('booking:created', {
+        _id: booking.insertedId,
+        ...data
+    })
     return res.json({result: result});
 });
+
+//In frontend this receives it:
+/*
+socket.on('booking:created', (b) => {
+  setBokningar(prev => [...prev, b])
+})
+  */
 
 router.delete('/bookings/:id', async (req, res) => {
     const result = await bookings.deleteOne(req.params.id);
