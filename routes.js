@@ -63,7 +63,7 @@ router.post('/bookings', async (req, res) => {
     const result = await bookings.addOne(req.body);
     //return res.redirect(`/resources/${req.body.resource_id}`);
     req.io?.to(`resource:${data.resource_id}`).emit('booking:created', {
-        _id: booking.insertedId,
+        _id: result.insertedId,
         ...data
     })
     return res.json({result: result});
@@ -85,5 +85,14 @@ router.put('bookings', async (req, res) => {
     const result = await bookings.updateOne(req.body);
     return res.json({result: result});
 });
+
+router.get('test/:message', async (req, res) => {
+    const message = req.params.message;
+    req.io?.to(`message:${message}`).emit('test:performed', {
+        message: message,
+        ...data
+    })
+    return res.json({message: message});
+})
 
 export default router;
