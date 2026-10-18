@@ -70,13 +70,17 @@ router.get('/test/broker', async (req, res) => {
     const BASE = process.env.BROKER_API_URL;
 
     const headers = {
-    'X-Booker-Group': process.env.BROKER_GROUP_TOKEN,
-    'Content-Type': 'application/json',
+        'X-Booker-Group': process.env.BROKER_GROUP_TOKEN,
+        'Content-Type': 'application/json',
     };
 
     const result = await fetch(`${BASE}/whoami`, { headers });
 
-    return res.json(result);
+    const testing = await result.json();
+
+    console.log(testing);
+
+    return res.json(testing);
 });
 
 export default router;
