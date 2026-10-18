@@ -72,9 +72,9 @@ router.get('/test/broker', async (req, res) => {
     'Content-Type': 'application/json',
     };
 
-    const res = await fetch(`${BASE}/whoami`, { headers });
+    const result = await fetch(`${BASE}/whoami`, { headers });
 
-    return res.json();
+    return res.json(result);
 });
 
 export default router;
