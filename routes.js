@@ -65,6 +65,8 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 router.get('/test/broker', async (req, res) => {
+    // Testing
+
     const BASE = process.env.BROKER_API_URL;
 
     const headers = {
