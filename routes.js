@@ -1,7 +1,7 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
 import express from 'express';
-import { broker } from "./config/broker";
+import { broker } from "./config/broker.js";
 import { test } from "vitest";
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
