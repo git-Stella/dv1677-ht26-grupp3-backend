@@ -1,6 +1,8 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
 import express from 'express';
+import { broker } from "./config/broker";
+import { test } from "vitest";
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
 
@@ -64,7 +66,7 @@ router.delete('/bookings/:id', async (req, res) => {
     return res.json(result);
 });
 
-router.get('/test/broker', async (req, res) => {
+router.get('/test/broker/who', async (req, res) => {
     // Testing
 
     const BASE = process.env.BROKER_API_URL;
@@ -81,6 +83,27 @@ router.get('/test/broker', async (req, res) => {
     console.log(testing);
 
     return res.json(testing);
+});
+
+router.get('/test/broker/inventory/:id', async (req, res) => {
+    // Testing
+
+    const BASE = process.env.BROKER_API_URL;
+
+    const headers = {
+        'X-Booker-Group': process.env.BROKER_GROUP_TOKEN,
+        'Content-Type': 'application/json',
+    };
+
+    // const result = await fetch(`${BASE}/proxmox/inventory`, { headers })
+    const result = await fetch(`${BASE}/${req.params.id}/inventory`, { headers })
+    const { nodes } = await result.json()
+    console.log(nodes.map(n => n.name))
+    
+    const testResult = await broker.inventory(req.params.id);
+    console.log("testResult: ", testResult);
+
+    return res.json(nodes);
 });
 
 export default router;
