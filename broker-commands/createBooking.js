@@ -11,7 +11,8 @@ export async function createBooking(req, res) {
   if (!resource) return res.status(404).json({ error: 'Resource not found' });
 
   const bookingId = new ObjectId();
-  const user = String(req.user._id);
+  // const user = String(req.user._id);
+  const user = String(req.body.user); // Instruktionerna säger fri text?
   const payload = resource.provider === 'maas'
     ? { systemId: resource.externalId, user, startsAt, endsAt, idempotencyKey: String(bookingId) }
     : { want, user, startsAt, endsAt, idempotencyKey: String(bookingId) };
