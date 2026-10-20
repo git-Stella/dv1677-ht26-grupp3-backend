@@ -21,7 +21,8 @@ export async function createBooking(req, res) {
     const { allocation } = await broker.allocate(resource.provider, payload);
 
     const booking = {
-      _id: bookingId, resourceId: resource._id, bookedBy: req.user._id,
+      // _id: bookingId, resourceId: resource._id, bookedBy: req.user._id,
+      _id: bookingId, resourceId: resource._id, bookedBy: req.body.user,
       startsAt: new Date(startsAt), endsAt: new Date(endsAt), status: 'confirmed',
     };
     await db.collection('bookings').insertOne({
