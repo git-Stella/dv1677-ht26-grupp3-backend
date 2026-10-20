@@ -3,7 +3,7 @@ import { broker } from '../config/broker.js';
 
 export async function syncResources() {
   const client = await getClient();
-  const db = client.getDB(process.env.DATABASE_NAME);
+  const db = client.db(process.env.DATABASE_NAME);
 
   const sources = { proxmox: 'nodes', maas: 'machines', openstack: 'projects' };
 
