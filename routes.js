@@ -2,6 +2,9 @@ import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
 import express from 'express';
 import { broker } from "./config/broker.js";
+import { syncResources } from "./db/syncResources.js";
+import { createBooking } from "./broker-commands/createBooking.js";
+import { cancelBooking } from "./broker-commands/cancelBooking.js";
 import { test } from "vitest";
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
@@ -92,6 +95,42 @@ router.get('/test/broker/inventory/:id', async (req, res) => {
     console.log("testResult: ", testResult);
 
     return res.json(testResult);
+});
+
+router.get('/test/broker/sync', async (req, res) => {
+    // Testing
+
+    await syncResources();
+
+    return;
+});
+
+router.post('/test/broker/book', async (req, res, next) => {
+    try {
+        console.log(req.body);
+
+        await syncResources();
+
+        const result = await createBooking(req, res);
+        return result;
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.post('/test/broker/cancel/:id', async (req, res, next) => {
+    // Testing
+
+    try {
+        console.log(req.params.id);
+
+        await syncResources();
+
+        const result = await cancelBooking(req, res);
+        return result;
+    } catch (e) {
+        next(e);
+    }
 });
 
 export default router;
