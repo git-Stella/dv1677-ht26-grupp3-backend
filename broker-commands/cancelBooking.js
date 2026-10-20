@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { getClient } from "../db/database.mjs";
-import { broker, BrokerError } from "../config/broker";
+import { broker, BrokerError } from "../config/broker.js";
 
 export async function cancelBooking(req, res) {
   const client = await getClient();
