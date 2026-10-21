@@ -7,8 +7,21 @@ export async function createBooking(req, res) {
   const client = await getClient();
   const db = client.db(process.env.DATABASE_NAME);
 
-  const resource = await db.collection('resources').findOne({ _id: new ObjectId(resourceId) });
-  if (!resource) return res.status(404).json({ error: 'Resource not found' });
+  let resource;
+
+  if (resourceId) {
+    resource = await db.collection('resources').findOne({ _id: new ObjectId(resourceId) });
+  } else if (want && Object.keys(want).length === 3 && "diskGb" in want) {
+    resource = await db.collection('resources').findOne({ provider: "proxmox" });
+  } else if (want && Object.keys(want).length === 2 && !("diskGb" in want)) {
+    resource = await db.collection('resources').findOne({ provider: "openstack" });
+  } else {
+    return res.status(404).json({ error: 'Invalid parameters' });
+  }
+
+  if (!resource) {
+    return res.status(404).json({ error: 'Resource not found' });
+  }
 
   const bookingId = new ObjectId();
   // const user = String(req.user._id);
