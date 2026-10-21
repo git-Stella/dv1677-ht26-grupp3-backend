@@ -52,7 +52,7 @@ router.delete('/resources/:id', async (req, res) => {
     //return res.redirect('/api');
 });
 
-router.put('resources', async (req, res) => {
+router.put('/resources', async (req, res) => {
     const result = await resources.updateOne(req.body);
     return res.json({result: result});
 });
@@ -60,13 +60,13 @@ router.put('resources', async (req, res) => {
 // --- Bokningar ---
 
 router.post('/bookings', async (req, res) => {
-    const result = await bookings.addOne(req.body);
+    const data = await bookings.addOne(req.body);
     //return res.redirect(`/resources/${req.body.resource_id}`);
     req.io?.to(`resource:${data.resource_id}`).emit('booking:created', {
         _id: result.insertedId,
         ...data
     })
-    return res.json({result: result});
+    return res.json({result: data});
 });
 
 //In frontend this receives it:
@@ -76,23 +76,32 @@ socket.on('booking:created', (b) => {
 })
   */
 
+router.get('/bookings/:id', async (req, res) => {
+    const result = await bookings.getByResource(req.params.id);
+    return res.json(result);
+})
+
 router.delete('/bookings/:id', async (req, res) => {
     const result = await bookings.deleteOne(req.params.id);
     return res.json(result);
 });
 
-router.put('bookings', async (req, res) => {
+router.put('/bookings', async (req, res) => {
     const result = await bookings.updateOne(req.body);
     return res.json({result: result});
 });
 
-router.get('test/:message', async (req, res) => {
+router.get('/test/:message', async (req, res) => {
     const message = req.params.message;
-    req.io?.to(`message:${message}`).emit('test:performed', {
-        message: message,
-        ...data
-    })
+    req.io?.to(`test`).emit('test:performed', `${message}`/*{
+        message: message
+    }*/)
     return res.json({message: message});
 })
+
+/*
+// Skicka till alla i rummet INKLUSIVE avsändaren
+io.to(`doc:${dokumentId}`).emit('uppdatering', data)
+*/
 
 export default router;
