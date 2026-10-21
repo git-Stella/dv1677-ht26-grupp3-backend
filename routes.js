@@ -118,11 +118,26 @@ router.post('/test/broker/book', async (req, res, next) => {
     }
 });
 
-router.post('/test/broker/cancel/:id', async (req, res, next) => {
+// router.post('/test/broker/cancel/:id', async (req, res, next) => {
+//     // Testing
+
+//     try {
+//         console.log(req.params.id);
+
+//         await syncResources();
+
+//         const result = await cancelBooking(req, res);
+//         return result;
+//     } catch (e) {
+//         next(e);
+//     }
+// });
+
+router.post('/test/broker/cancel', async (req, res, next) => {
     // Testing
 
     try {
-        console.log(req.params.id);
+        console.log(req.body);
 
         await syncResources();
 
