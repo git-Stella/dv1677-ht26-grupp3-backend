@@ -23,6 +23,19 @@ export async function createBooking(req, res) {
     return res.status(404).json({ error: 'Resource not found' });
   }
 
+  const krock = await db.collection('bookings').findOne({
+    resource_id: resourceId,
+    start: { $lt: endsAt },
+    end:   { $gt: startsAt }
+  })
+
+  if (krock) {
+    return res.status(409).json({
+      error: 'Tiden är redan bokad',
+      krockarMed: krock._id
+    })
+  }
+
   const bookingId = new ObjectId();
   // const user = String(req.user._id);
   const user = String(req.body.user); // Instruktionerna säger fri text?
