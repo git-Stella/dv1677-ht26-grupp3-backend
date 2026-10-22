@@ -25,8 +25,8 @@ export async function createBooking(req, res) {
 
   const krock = await db.collection('bookings').findOne({
     resource_id: resourceId,
-    start: { $lt: endsAt },
-    end:   { $gt: startsAt }
+    start: { $lt: new ISODate(endsAt) },
+    end:   { $gt: new ISODate(startsAt) }
   })
 
   if (krock) {
