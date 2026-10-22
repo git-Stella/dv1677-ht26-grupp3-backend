@@ -117,6 +117,11 @@ router.get('/test/:message', async (req, res) => {
     return res.json({message: message});
 })
 
+router.get('/test/notify' async (req, res) => {
+    await notifyDiscord(`Testing`)
+    return res.json({test: "tested"})
+})
+
 /*
 // Skicka till alla i rummet INKLUSIVE avsändaren
 io.to(`doc:${dokumentId}`).emit('uppdatering', data)
