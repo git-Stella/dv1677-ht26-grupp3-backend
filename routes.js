@@ -66,6 +66,12 @@ router.post('/bookings', async (req, res) => {
         _id: result.insertedId,
         ...data
     })
+    try {
+        await notifyDiscord(`Ny bokning: ${data.resource_id}`)
+    }
+    catch (error) {
+        console.error('Notifiering misslyckades:', error.message)
+    }
     return res.json({result: data});
 });
 
@@ -82,13 +88,25 @@ router.get('/bookings/:id', async (req, res) => {
 })
 
 router.delete('/bookings/:id', async (req, res) => {
-    const result = await bookings.deleteOne(req.params.id);
-    return res.json(result);
+    const data = await bookings.deleteOne(req.params.id);
+    try {
+        await notifyDiscord(`Bokning avslutad: ${data.resource_id}`)
+    }
+    catch (error) {
+        console.error('Notifiering misslyckades:', error.message)
+    }
+    return res.json(data);
 });
 
 router.put('/bookings', async (req, res) => {
-    const result = await bookings.updateOne(req.body);
-    return res.json({result: result});
+    const data = await bookings.updateOne(req.body);
+    try {
+        await notifyDiscord(`Bokning uppdaterad: ${data.resource_id}`)
+    }
+    catch (error) {
+        console.error('Notifiering misslyckades:', error.message)
+    }
+    return res.json({result: data});
 });
 
 router.get('/test/:message', async (req, res) => {
