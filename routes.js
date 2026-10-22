@@ -1,6 +1,7 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
 import express from 'express';
+import { notifyUpdate, notifyTest, notifyDiscord } from './methods/notify.js';
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
 
@@ -66,12 +67,13 @@ router.post('/bookings', async (req, res) => {
         _id: result.insertedId,
         ...data
     })
-    try {
+    /*try {
         await notifyDiscord(`Ny bokning: ${data.resource_id}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
-    }
+    }*/
+    notifyUpdate(data);
     return res.json({result: data});
 });
 
@@ -89,27 +91,29 @@ router.get('/bookings/:id', async (req, res) => {
 
 router.delete('/bookings/:id', async (req, res) => {
     const data = await bookings.deleteOne(req.params.id);
-    try {
+    /*try {
         await notifyDiscord(`Bokning avslutad: ${data.resource_id}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
-    }
+    }*/
+    notifyUpdate(data);
     return res.json(data);
 });
 
 router.put('/bookings', async (req, res) => {
     const data = await bookings.updateOne(req.body);
-    try {
+    /*try {
         await notifyDiscord(`Bokning uppdaterad: ${data.resource_id}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
-    }
+    }*/
+    notifyUpdate(data);
     return res.json({result: data});
 });
 
-router.get('/test/:message', async (req, res) => {
+router.get('/test/message/:message', async (req, res) => {
     const message = req.params.message;
     req.io?.to(`test`).emit('test:performed', `${message}`/*{
         message: message
@@ -117,8 +121,8 @@ router.get('/test/:message', async (req, res) => {
     return res.json({message: message});
 })
 
-router.get('/test/notify' async (req, res) => {
-    await notifyDiscord(`Testing`)
+router.get('/test/notify', async (req, res) => {
+    await notifyTest(`worf`)
     return res.json({test: "tested"})
 })
 
