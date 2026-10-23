@@ -8,9 +8,10 @@ export async function createBooking(req, res) {
   const db = client.db(process.env.DATABASE_NAME);
 
   let resource;
+  const resourceObject = new ObjectId(resourceId);
 
   if (resourceId) {
-    resource = await db.collection('resources').findOne({ _id: new ObjectId(resourceId) });
+    resource = await db.collection('resources').findOne({ _id: resourceObject });
   } else if (want && Object.keys(want).length === 3 && "diskGb" in want) {
     resource = await db.collection('resources').findOne({ provider: "proxmox" });
   } else if (want && Object.keys(want).length === 2 && !("diskGb" in want)) {
@@ -24,10 +25,10 @@ export async function createBooking(req, res) {
   }
 
   const krock = await db.collection('bookings').findOne({
-    resourceId: resourceId,
+    resourceId: resourceObject,
     startsAt: { $lt: new Date(endsAt) },
     endsAt:   { $gt: new Date(startsAt) }
-  })
+  });
 
   if (krock) {
     return res.status(409).json({
