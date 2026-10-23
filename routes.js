@@ -5,6 +5,7 @@ import { broker } from "./config/broker.js";
 import { syncResources } from "./db/syncResources.js";
 import { createBooking } from "./broker-commands/createBooking.js";
 import { cancelBooking } from "./broker-commands/cancelBooking.js";
+import { ledigaTider } from "./domain/availability.js";
 import { test } from "vitest";
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
@@ -146,6 +147,25 @@ router.post('/test/broker/cancel', async (req, res, next) => {
     } catch (e) {
         next(e);
     }
+});
+
+router.get('/test/broker/availability', async (req, res) => {
+    // Testing
+
+    await syncResources();
+
+    const bookings = await bookings.getAll();
+
+    const start = new Date();
+    start.setUTCHours(0,0,0,0);
+
+    const end = new Date();
+    end.setUTCHours(23,59,59,999);
+
+    const available = await ledigaTider(bookings, start, end);
+    console.log("Test availability: ", "bookings: ", bookings, "start: ", start, "end: ", end, "available: ", available);
+
+    return res.json(available);
 });
 
 export default router;

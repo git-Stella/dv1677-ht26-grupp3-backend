@@ -1,11 +1,16 @@
 import { db } from './db/database.mjs';
 import { BSON } from 'mongodb';
 
-const dbNameResources = process.env.COLLECTION_NAME_RESOURCES || "booking_project_collection_bookings";
+const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS || "booking_project_collection_bookings";
 
 const bookings = {
+    getAll: async function getAll() {
+        const res = await db.collection(dbNameBookings).find({}).toArray();
+
+        return res;
+    },
     getByResource: async function getByResource(resourceId) {
-        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
+        const res = await db.collection(dbNameBookings).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
 
         return res;
     },
@@ -18,15 +23,15 @@ const bookings = {
             status: "confirmed"
         };
     
-        db.collection(dbNameResources).insertOne(newItem);
+        db.collection(dbNameBookings).insertOne(newItem);
 
-        const res = await db.collection(dbNameResources).find().sort({_id:-1});
+        const res = await db.collection(dbNameBookings).find().sort({_id:-1});
 
         return res;
     },
     deleteOne: async function deleteOne(id) {
         const nid = new BSON.ObjectId(id);
-        const res = await db.collection(dbNameResources).deleteOne({ _id: nid });
+        const res = await db.collection(dbNameBookings).deleteOne({ _id: nid });
 
         return { changes: res.deletedCount };
     }
