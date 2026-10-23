@@ -154,7 +154,7 @@ router.get('/test/broker/availability', async (req, res) => {
 
     await syncResources();
 
-    const bookings = await bookings.getAll();
+    const bookingsList = await bookings.getAll();
 
     const start = new Date();
     start.setUTCHours(0,0,0,0);
@@ -162,8 +162,8 @@ router.get('/test/broker/availability', async (req, res) => {
     const end = new Date();
     end.setUTCHours(23,59,59,999);
 
-    const available = await ledigaTider(bookings, start, end);
-    console.log("Test availability: ", "bookings: ", bookings, "start: ", start, "end: ", end, "available: ", available);
+    const available = await ledigaTider(bookingsList, start, end);
+    console.log("Test availability: ", "bookings: ", bookingsList, "start: ", start, "end: ", end, "available: ", available);
 
     return res.json(available);
 });
