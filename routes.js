@@ -158,12 +158,10 @@ router.get('/test/broker/availability', async (req, res) => {
 
     const start = new Date();
     start.setUTCHours(0,0,0,0);
-
     const end = new Date();
     end.setUTCHours(23,59,59,999);
 
     const available = await ledigaTider(bookingsList, start, end);
-    console.log("Test availability: ", "bookings: ", bookingsList, "start: ", start, "end: ", end, "available: ", available);
 
     return res.json(available);
 });

@@ -1,7 +1,7 @@
 import { db } from './db/database.mjs';
 import { BSON } from 'mongodb';
 
-const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS || "booking_project_collection_bookings";
+const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS || "bookings";
 
 const bookings = {
     getAll: async function getAll() {
