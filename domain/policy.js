@@ -1,11 +1,14 @@
 export function kontrolleraRegler(bokning, användarensBokningar) {
-  const timmar = (bokning.endsAt - bokning.startsAt) / 3600000
+  const ends = new Date(bokning.endsAt);
+  const starts = new Date(bokning.startsAt);
+  const timmar = (ends - starts) / 3600000
+  console.log("timmar: ", timmar);
 
   if (timmar > 4) {
     return { ok: false, fel: 'Max 4 timmar per bokning' }
   }
 
-  if (bokning.startsAt < Date.now()) {
+  if (starts < Date.now()) {
     return { ok: false, fel: 'Kan inte boka bakåt i tiden' }
   }
 
