@@ -1,5 +1,6 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
+import bookingsForProj from "./bookingsForProj.mjs";
 import express from 'express';
 import { broker } from "./config/broker.js";
 import { syncResources } from "./db/syncResources.js";
@@ -154,7 +155,7 @@ router.get('/test/broker/availability', async (req, res) => {
 
     await syncResources();
 
-    const bookingsList = await bookings.getAll();
+    const bookingsList = await bookingsForProj.getAll();
 
     const start = new Date();
     start.setUTCHours(0,0,0,0);
