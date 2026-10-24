@@ -53,7 +53,13 @@ export async function createBooking(req, res) {
   };
 
   const userBookings = await bookingsForProj.getUserBookings(user);
-  kontrolleraRegler(testBooking, userBookings);
+  const rules = kontrolleraRegler(testBooking, userBookings);
+
+  if (!rules.ok) {
+    return res.status(409).json({
+      error: rules.fel
+    });
+  }
 
   try {
     const { allocation } = await broker.allocate(resource.provider, payload);
