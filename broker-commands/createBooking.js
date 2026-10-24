@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb'
 import { getClient } from '../db/database.mjs'
 import { broker, BrokerError } from '../config/broker.js'
+import { kontrolleraRegler } from '../domain/policy.js';
+import bookingsForProj from '../db/bookingsForProj.mjs';
 
 export async function createBooking(req, res) {
   const { resourceId, startsAt, endsAt, want } = req.body;
@@ -26,6 +28,7 @@ export async function createBooking(req, res) {
 
   const krock = await db.collection('bookings').findOne({
     resourceId: resourceObject,
+    status: "confirmed",
     startsAt: { $lt: new Date(endsAt) },
     endsAt:   { $gt: new Date(startsAt) }
   });
@@ -43,6 +46,14 @@ export async function createBooking(req, res) {
   const payload = resource.provider === 'maas'
     ? { systemId: resource.externalId, user, startsAt, endsAt, idempotencyKey: String(bookingId) }
     : { want, user, startsAt, endsAt, idempotencyKey: String(bookingId) };
+  
+  const testBooking = {
+    _id: bookingId, resourceId: resource._id, bookedBy: req.body.user,
+    startsAt: new Date(startsAt), endsAt: new Date(endsAt),
+  };
+
+  const userBookings = await bookingsForProj.getUserBookings(user);
+  kontrolleraRegler(testBooking, userBookings);
 
   try {
     const { allocation } = await broker.allocate(resource.provider, payload);
