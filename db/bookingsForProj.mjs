@@ -1,4 +1,4 @@
-import { db } from './db/database.mjs';
+import { db } from './database.mjs';
 import { BSON } from 'mongodb';
 
 const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS_PROJ || "bookings";
@@ -13,6 +13,13 @@ const bookingsForProj = {
         const res = await db.collection(dbNameBookings).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
 
         return res;
+    },
+    getUserBookings: async function getUserBookings(user) {
+        const today = new Date();
+        const res = await db.collection(dbNameBookings).find({ bookedBy: user }).sort({ start_time: -1 }).toArray();
+        const result = res.filter((booking) => new Date(booking.endsAt) > today && booking.status == "confirmed");
+
+        return result;
     },
     addOne: async function addOne(body) {
         const newItem = {

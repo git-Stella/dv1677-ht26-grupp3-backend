@@ -1,6 +1,6 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
-import bookingsForProj from "./bookingsForProj.mjs";
+import bookingsForProj from "./db/bookingsForProj.mjs";
 import express from 'express';
 import { broker } from "./config/broker.js";
 import { syncResources } from "./db/syncResources.js";
@@ -165,6 +165,18 @@ router.get('/test/broker/availability', async (req, res) => {
     const available = await ledigaTider(bookingsList, start, end);
 
     return res.json(available);
+});
+
+router.get('/test/broker/user/:user', async (req, res) => {
+    // Testing
+
+    // await syncResources();
+
+    const user = req.params.user;
+
+    const result = await bookingsForProj.getUserBookings(user);
+
+    return res.json(result);
 });
 
 export default router;
