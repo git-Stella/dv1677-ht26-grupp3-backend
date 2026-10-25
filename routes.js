@@ -1,6 +1,9 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
+import users from "./users.mjs";
 import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { notifyUpdate, notifyTest, notifyDiscord } from './methods/notify.js';
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
@@ -124,6 +127,37 @@ router.get('/test/message/:message', async (req, res) => {
 router.get('/test/notify', async (req, res) => {
     await notifyTest(`worf`)
     return res.json({test: "tested"})
+})
+
+router.post('/auth/register', async (req, res) => {
+    //console.log(req.body.password)
+    const hash = await bcrypt.hash(req.body.password, 10)
+    //await db.collection('users').insertOne({ email, password: hash })
+    const data = {
+        hash: hash,
+        mail: req.body.mail
+    }
+    //console.log(data)
+    const user = await users.addOne(data)
+    //console.log(user);
+    return res.json({status: "created"})
+})
+
+router.post('/auth/login', async (req, res) => {
+    //console.log(req.body.mail)
+    const user = await users.getOneByMail(req.body.mail)
+    //console.log(req.body.password)
+    //console.log(user)
+    const ok = user && await bcrypt.compare(req.body.password, user[0].hash)
+    if (!ok) {
+        return res.status(401).json({ error: 'Incorrect mail or password' })
+    }
+    const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '2h' }
+    )
+    res.json({token: token})
 })
 
 /*

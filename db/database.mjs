@@ -12,6 +12,7 @@ let client = null;
 // const client = new MongoClient(process.env.MONGODB_URI);
 const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS || "booking_project_collection_bookings";
 const dbNameResources = process.env.COLLECTION_NAME_RESOURCES || "booking_project_collection_resources";
+const dbNameUsers = process.env.COLLECTION_NAME_USERS || "booking_project_collection_users";
 const dbName = process.env.DATABASE_NAME || "jsramverk_test";
 let db;
 
