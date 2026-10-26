@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import { getClient } from '../db/database.mjs'
 import { broker, BrokerError } from '../config/broker.js'
 import { kontrolleraRegler } from '../domain/policy.js';
+import { overlappar } from '../domain/overlap.js';
 import bookingsForProj from '../db/bookingsForProj.mjs';
 
 export async function createBooking(req, res) {
@@ -26,23 +27,13 @@ export async function createBooking(req, res) {
     return res.status(404).json({ error: 'Resource not found' });
   }
 
-  const krock = await db.collection('bookings').findOne({
-    resourceId: resourceObject,
-    status: "confirmed",
-    startsAt: { $lt: new Date(endsAt) },
-    endsAt:   { $gt: new Date(startsAt) }
-  });
-
-  if (krock) {
-    return res.status(409).json({
-      error: 'Tiden är redan bokad',
-      krockarMed: krock._id
-    })
+  if (resource.provider == "maas") {
+    overlappar(db, resourceObject, endsAt, startsAt, res);
   }
 
   const bookingId = new ObjectId();
   // const user = String(req.user._id);
-  const user = String(req.body.user); // Instruktionerna säger fri text?
+  const user = String(req.body.user);
   const payload = resource.provider === 'maas'
     ? { systemId: resource.externalId, user, startsAt, endsAt, idempotencyKey: String(bookingId) }
     : { want, user, startsAt, endsAt, idempotencyKey: String(bookingId) };

@@ -6,9 +6,8 @@ export async function cancelBooking(req, res) {
   const client = await getClient();
   const db = client.db(process.env.DATABASE_NAME);
 
-  const booking = await db.collection('bookings').findOne({ _id: new ObjectId(req.body.secret) });
+  const booking = await db.collection('bookings').findOne({ "broker.secret": req.body.secret });
   if (!booking) return res.status(404).json({ error: 'Not found' });
-  // (kontrollera behörighet precis som i era övriga routes)
 
   const resource = await db.collection('resources').findOne({ _id: booking.resourceId });
 

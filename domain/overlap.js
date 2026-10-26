@@ -1,6 +1,7 @@
 export async function overlappar(db, resourceObject, endsAt, startsAt, res) {
   const krock = await db.collection('bookings').findOne({
     resourceId: resourceObject,
+    status: "confirmed",
     startsAt: { $lt: new Date(endsAt) },
     endsAt:   { $gt: new Date(startsAt) }
   });
