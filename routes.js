@@ -4,7 +4,7 @@ import users from "./users.mjs";
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { notifyUpdate, notifyTest, notifyDiscord } from './methods/notify.js';
+import { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete } from './methods/notify.js';
 import requireAuth from './middleware/auth.js';
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
@@ -44,9 +44,9 @@ router.post('/resources', async (req, res) => {
     //return res.redirect('/api');
 });
 
-router.get('/resources/:id', async (req, res) => {
+router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
-    const resourceBookings = await bookings.getByResource(req.params.id);
+    const resourceBookings = await bookings.getByResource(req.params.id, req.body.user);
     return res.json({bookings: resourceBookings, resources: resource})
     //return res.render("resource", { resource, bookings: resourceBookings });
 });
@@ -64,20 +64,15 @@ router.put('/resources', async (req, res) => {
 
 // --- Bokningar ---
 
-router.post('/bookings', async (req, res) => {
+router.post('/bookings', requireAuth, async (req, res) => {
     const data = await bookings.addOne(req.body);
     //return res.redirect(`/resources/${req.body.resource_id}`);
     req.io?.to(`resource:${data.resource_id}`).emit('booking:created', {
         _id: result.insertedId,
         ...data
     })
-    /*try {
-        await notifyDiscord(`Ny bokning: ${data.resource_id}`)
-    }
-    catch (error) {
-        console.error('Notifiering misslyckades:', error.message)
-    }*/
-    notifyUpdate(data);
+
+    notifyBook(data);
     return res.json({result: data});
 });
 
@@ -88,31 +83,21 @@ socket.on('booking:created', (b) => {
 })
   */
 
-router.get('/bookings/:id', async (req, res) => {
-    const result = await bookings.getByResource(req.params.id);
+router.get('/bookings/:id', requireAuth, async (req, res) => {
+    const result = await bookings.getByResource(req.params.id, req.body.user);
     return res.json(result);
 })
 
-router.delete('/bookings/:id', async (req, res) => {
-    const data = await bookings.deleteOne(req.params.id);
-    /*try {
-        await notifyDiscord(`Bokning avslutad: ${data.resource_id}`)
-    }
-    catch (error) {
-        console.error('Notifiering misslyckades:', error.message)
-    }*/
-    notifyUpdate(data);
+router.delete('/bookings/:id', requireAuth, async (req, res) => {
+    const data = await bookings.deleteOne(req.params.id, req.body.user);
+
+    notifyDelete(data);
     return res.json(data);
 });
 
-router.put('/bookings', async (req, res) => {
+router.put('/bookings', requireAuth, async (req, res) => {
     const data = await bookings.updateOne(req.body);
-    /*try {
-        await notifyDiscord(`Bokning uppdaterad: ${data.resource_id}`)
-    }
-    catch (error) {
-        console.error('Notifiering misslyckades:', error.message)
-    }*/
+
     notifyUpdate(data);
     return res.json({result: data});
 });

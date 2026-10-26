@@ -16,6 +16,24 @@ async function notifyUpdate(data) {
     }
 }
 
+async function notifyBook(data) {
+    try {
+        await notifyDiscord(`Bokning genomförd: ${data.resource_id}`)
+    }
+    catch (error) {
+        console.error('Notifiering misslyckades:', error.message)
+    }
+}
+
+async function notifyDelete(data) {
+    try {
+        await notifyDiscord(`Bokning avslutad: ${data.resource_id}`)
+    }
+    catch (error) {
+        console.error('Notifiering misslyckades:', error.message)
+    }
+}
+
 async function notifyTest(word) {
     try {
         await notifyDiscord(`Test: ${word}`)
@@ -25,4 +43,4 @@ async function notifyTest(word) {
     }
 }
 
-export { notifyUpdate, notifyTest, notifyDiscord };
+export { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete };
