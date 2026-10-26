@@ -5,6 +5,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { notifyUpdate, notifyTest, notifyDiscord } from './methods/notify.js';
+import requireAuth from './middleware/auth.js';
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
 
@@ -124,7 +125,7 @@ router.get('/test/message/:message', async (req, res) => {
     return res.json({message: message});
 })
 
-router.get('/test/notify', async (req, res) => {
+router.get('/test/notify', requireAuth, async (req, res) => {
     await notifyTest(`worf`)
     return res.json({test: "tested"})
 })
@@ -138,6 +139,10 @@ router.post('/auth/register', async (req, res) => {
         mail: req.body.mail
     }
     //console.log(data)
+    const exists = await users.getOneByMail(req.body.mail)
+    if (exists.length != 0) {
+        return res.json({status: "unable to create"})
+    }
     const user = await users.addOne(data)
     //console.log(user);
     return res.json({status: "created"})
