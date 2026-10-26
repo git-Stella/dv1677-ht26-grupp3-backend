@@ -5,18 +5,18 @@ const dbNameBookings = process.env.COLLECTION_NAME_BOOKINGS_PROJ || "bookings";
 
 const bookingsForProj = {
     getAll: async function getAll() {
-        const res = await db.collection(dbNameBookings).find({}).toArray();
+        const res = await db.collection(dbNameBookings).find({}, { projection: { "broker.secret": 0 } }).toArray();
 
         return res;
     },
     getByResource: async function getByResource(resourceId) {
-        const res = await db.collection(dbNameBookings).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
+        const res = await db.collection(dbNameBookings).find({ resource_id: parseInt(resourceId, 10) }, { projection: { "broker.secret": 0 } }).sort({ start_time: -1 }).toArray();
 
         return res;
     },
     getUserBookings: async function getUserBookings(user) {
         const today = new Date();
-        const res = await db.collection(dbNameBookings).find({ bookedBy: user }).sort({ start_time: -1 }).toArray();
+        const res = await db.collection(dbNameBookings).find({ bookedBy: user }, { projection: { "broker.secret": 0 } }).sort({ start_time: -1 }).toArray();
         const result = res.filter((booking) => new Date(booking.endsAt) > today && booking.status == "confirmed");
 
         return result;
@@ -30,11 +30,11 @@ const bookingsForProj = {
             status: "confirmed"
         };
     
-        db.collection(dbNameBookings).insertOne(newItem);
+        const result = await db.collection(dbNameBookings).insertOne(newItem);
 
-        const res = await db.collection(dbNameBookings).find().sort({_id:-1});
+        const booking = await db.collection(dbNameBookings).find({ _id: result.insertedId }, { projection: { "broker.secret": 0 } });
 
-        return res;
+        return booking;
     },
     deleteOne: async function deleteOne(id) {
         const nid = new BSON.ObjectId(id);
