@@ -3,7 +3,6 @@ import bookings from "./bookings.mjs";
 import bookingsForProj from "./db/bookingsForProj.mjs";
 import express from 'express';
 import { broker } from "./config/broker.js";
-import { syncResources } from "./db/syncResources.js";
 import { createBooking } from "./broker-commands/createBooking.js";
 import { cancelBooking } from "./broker-commands/cancelBooking.js";
 import { ledigaTider } from "./domain/availability.js";
@@ -102,7 +101,6 @@ router.get('/test/broker/inventory/:id', async (req, res) => {
 router.get('/test/broker/sync', async (req, res) => {
     // Testing
 
-    await syncResources();
 
     return;
 });
@@ -110,8 +108,6 @@ router.get('/test/broker/sync', async (req, res) => {
 router.post('/test/broker/book', async (req, res, next) => {
     try {
         console.log(req.body);
-
-        await syncResources();
 
         const result = await createBooking(req, res);
         return result;
@@ -124,8 +120,6 @@ router.post('/test/broker/cancel', async (req, res, next) => {
     try {
         console.log(req.body);
 
-        await syncResources();
-
         const result = await cancelBooking(req, res);
         return result;
     } catch (e) {
@@ -134,8 +128,6 @@ router.post('/test/broker/cancel', async (req, res, next) => {
 });
 
 router.get('/test/broker/availability', async (req, res) => {
-    await syncResources();
-
     const bookingsList = await bookingsForProj.getAll();
 
     const start = new Date();
@@ -151,7 +143,7 @@ router.get('/test/broker/availability', async (req, res) => {
 router.get('/test/broker/user/:user', async (req, res) => {
     // Testing
 
-    // await syncResources();
+    /
 
     const user = req.params.user;
 
