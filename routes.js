@@ -143,8 +143,6 @@ router.get('/test/broker/availability', async (req, res) => {
 router.get('/test/broker/user/:user', async (req, res) => {
     // Testing
 
-    /
-
     const user = req.params.user;
 
     const result = await bookingsForProj.getUserBookings(user);
