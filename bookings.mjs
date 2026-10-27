@@ -5,7 +5,7 @@ const dbNameResources = process.env.COLLECTION_NAME_BOOKINGS || "booking_project
 
 const bookings = {
     getByResource: async function getByResource(resourceId, userId) {
-        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10) },{ user: userId }).sort({ start_time: -1 }).toArray();
+        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10), user: userId }).sort({ start_time: -1 }).toArray();
 
         return res;
     },

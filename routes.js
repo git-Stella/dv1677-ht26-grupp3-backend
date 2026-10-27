@@ -83,8 +83,8 @@ socket.on('booking:created', (b) => {
 })
   */
 
-router.get('/bookings/:id', requireAuth, async (req, res) => {
-    const result = await bookings.getByResource(req.params.id, req.body.user);
+router.get('/bookings/:id/:user', requireAuth, async (req, res) => {
+    const result = await bookings.getByResource(req.params.id, req.params.user);
     return res.json(result);
 })
 
@@ -147,7 +147,7 @@ router.post('/auth/login', async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '2h' }
     )
-    res.json({token: token})
+    res.json({token: token, user: user[0].mail})
 })
 
 /*
