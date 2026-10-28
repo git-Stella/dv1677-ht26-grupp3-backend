@@ -141,7 +141,10 @@ router.post('/auth/register', async (req, res) => {
 
 router.post('/auth/login', async (req, res) => {
     //console.log(req.body.mail)
-    const user = await users.getOneByMail(req.body.mail)
+    let user = await users.getOneByMail(req.body.mail)
+    if (!user[0]) {
+        user = [{hash: "F"}]
+    }
     //console.log(req.body.password)
     //console.log(user)
     const ok = user && await bcrypt.compare(req.body.password, user[0].hash)
