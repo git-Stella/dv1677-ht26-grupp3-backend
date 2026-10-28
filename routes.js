@@ -200,6 +200,7 @@ router.post('/test/broker/book', async (req, res, next) => {
         console.log(req.body);
 
         const result = await createBooking(req, res);
+        notifyBook(result)
         return result;
     } catch (e) {
         next(e);
@@ -211,6 +212,7 @@ router.post('/test/broker/cancel', async (req, res, next) => {
         console.log(req.body);
 
         const result = await cancelBooking(req, res);
+        notifyDelete(result)
         return result;
     } catch (e) {
         next(e);
