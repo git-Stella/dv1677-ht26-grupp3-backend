@@ -1,5 +1,11 @@
 import resources from "./resources.mjs";
 import bookings from "./bookings.mjs";
+import users from "./users.mjs";
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete } from './methods/notify.js';
+import requireAuth from './middleware/auth.js';
 import bookingsForProj from "./db/bookingsForProj.mjs";
 import express from 'express';
 import { broker } from "./config/broker.js";
@@ -20,17 +26,23 @@ router.get('/', async (req, res) => {
     return res.json({resources: await resources.getAll()});
 });
 
+/*router.post('/bookings', async (req, res) => {
+  const db = await connectDB();
+  const result = await db.collection('bookings').insertOne(req.body);
+
+  // Skicka till alla som tittar på den här resursen
+  req.io.to(`resource:${req.body.resource_id}`).emit('booking:created', {
+    _id: result.insertedId,
+    ...req.body
+  });
+
+  res.status(201).json({ _id: result.insertedId });
+});*/
+//req.io?.to(rum).emit('booking:created', data);
+
 router.get('/info', async (req, res) => {
     const introduction = {devs: ["Andi Dupa", "Stella Karlsson"], course: "dv1677", group: 3, term: "ht26"}
     return res.json(introduction)
-});
-
-router.get('/deprecated', async (req, res) => {
-    return res.render("index", { resources: await resources.getAll() });
-});
-
-router.get('/deprecated/resources/new', async (req, res) => {
-    return res.render("resource-form", { resource: {} });
 });
 
 router.post('/resources', async (req, res) => {
@@ -39,17 +51,11 @@ router.post('/resources', async (req, res) => {
     //return res.redirect('/api');
 });
 
-router.get('/resources/:id', async (req, res) => {
+router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
-    const resourceBookings = await bookings.getByResource(req.params.id);
+    const resourceBookings = await bookings.getByResource(req.params.id, req.body.user);
     return res.json({bookings: resourceBookings, resources: resource})
     //return res.render("resource", { resource, bookings: resourceBookings });
-});
-
-router.get('/deprecated/resources/:id/edit', async (req, res) => {
-    return res.render("resource-form", {
-        resource: await resources.getOne(req.params.id)
-    });
 });
 
 router.delete('/resources/:id', async (req, res) => {
@@ -58,18 +64,103 @@ router.delete('/resources/:id', async (req, res) => {
     //return res.redirect('/api');
 });
 
+router.put('/resources', async (req, res) => {
+    const result = await resources.updateOne(req.body);
+    return res.json({result: result});
+});
+
 // --- Bokningar ---
 
-router.post('/bookings', async (req, res) => {
-    await bookings.addOne(req.body);
-    return res.redirect(`/resources/${req.body.resource_id}`);
+router.post('/bookings', requireAuth, async (req, res) => {
+    const data = await bookings.addOne(req.body);
+    //return res.redirect(`/resources/${req.body.resource_id}`);
+    req.io?.to(`resource:${data.resource_id}`).emit('booking:created', {
+        _id: result.insertedId,
+        ...data
+    })
+
+    notifyBook(data);
+    return res.json({result: data});
 });
 
-router.delete('/bookings/:id', async (req, res) => {
-    const result = await bookings.deleteOne(req.params.id);
+//In frontend this receives it:
+/*
+socket.on('booking:created', (b) => {
+  setBokningar(prev => [...prev, b])
+})
+  */
+
+router.get('/bookings/:id/:user', requireAuth, async (req, res) => {
+    const result = await bookings.getByResource(req.params.id, req.params.user);
     return res.json(result);
+})
+
+router.delete('/bookings/:id', requireAuth, async (req, res) => {
+    const data = await bookings.deleteOne(req.params.id, req.body.user);
+
+    notifyDelete(data);
+    return res.json(data);
 });
 
+router.put('/bookings', requireAuth, async (req, res) => {
+    const data = await bookings.updateOne(req.body);
+
+    notifyUpdate(data);
+    return res.json({result: data});
+});
+
+router.get('/test/message/:message', async (req, res) => {
+    const message = req.params.message;
+    req.io?.to(`test`).emit('test:performed', `${message}`/*{
+        message: message
+    }*/)
+    return res.json({message: message});
+})
+
+router.get('/test/notify', requireAuth, async (req, res) => {
+    await notifyTest(`worf`)
+    return res.json({test: "tested"})
+})
+
+router.post('/auth/register', async (req, res) => {
+    //console.log(req.body.password)
+    const hash = await bcrypt.hash(req.body.password, 10)
+    //await db.collection('users').insertOne({ email, password: hash })
+    const data = {
+        hash: hash,
+        mail: req.body.mail
+    }
+    //console.log(data)
+    const exists = await users.getOneByMail(req.body.mail)
+    if (exists.length != 0) {
+        return res.json({status: "unable to create"})
+    }
+    const user = await users.addOne(data)
+    //console.log(user);
+    return res.json({status: "created"})
+})
+
+router.post('/auth/login', async (req, res) => {
+    //console.log(req.body.mail)
+    const user = await users.getOneByMail(req.body.mail)
+    //console.log(req.body.password)
+    //console.log(user)
+    const ok = user && await bcrypt.compare(req.body.password, user[0].hash)
+    if (!ok) {
+        return res.status(401).json({ error: 'Incorrect mail or password' })
+    }
+    const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '2h' }
+    )
+    res.json({token: token, user: user[0].mail})
+})
+
+/*
+// Skicka till alla i rummet INKLUSIVE avsändaren
+io.to(`doc:${dokumentId}`).emit('uppdatering', data)
+*/
 router.get('/test/broker/who', async (req, res) => {
     // Testing
 

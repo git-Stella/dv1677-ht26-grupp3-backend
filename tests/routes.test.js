@@ -4,6 +4,11 @@ import request from 'supertest'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 // import app from '../app.mjs'
 import { connectDB, closeDB, testDatabase } from '../db/database.mjs'
+import { vi } from 'vitest'
+
+vi.mock('../methods/notify.js', () => ({
+  notifiera: vi.fn()
+}))
 
 let mongod;
 let app;

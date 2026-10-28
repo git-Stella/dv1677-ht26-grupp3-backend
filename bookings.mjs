@@ -9,8 +9,8 @@ const bookings = {
 
         return res;
     },
-    getByResource: async function getByResource(resourceId) {
-        const res = await db.collection(dbNameBookings).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
+    getByResource: async function getByResource(resourceId, userId) {
+        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10), user: userId }).sort({ start_time: -1 }).toArray();
 
         return res;
     },
@@ -29,11 +29,25 @@ const bookings = {
 
         return res;
     },
-    deleteOne: async function deleteOne(id) {
+    deleteOne: async function deleteOne(id, userId) {
         const nid = new BSON.ObjectId(id);
-        const res = await db.collection(dbNameBookings).deleteOne({ _id: nid });
+        const res = await db.collection(dbNameResources).deleteOne({ _id: nid, user: userId });
 
         return { changes: res.deletedCount };
+    },
+    updateOne: async function updateOne(body) {
+        const filter = { _id: body._id, user: body.user };
+        const updateBooking = {
+            $set: {
+                resource_id: body.resource_id,
+                user: body.user, start_time:
+                body.start_time, end_time:
+                body.end_time,
+                status: body.status
+            },
+        };
+        const res = await db.collection(dbNameResources).updateOne(filter, updateBooking)
+        return res;
     }
 };
 
