@@ -22,7 +22,7 @@ async function getClient() {
         await client.connect();
     }
     return client;
-}
+};
 
 async function connectDB() {
   const c = await getClient();

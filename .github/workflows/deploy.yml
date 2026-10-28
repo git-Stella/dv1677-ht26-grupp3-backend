@@ -59,6 +59,9 @@ jobs:
             # MONGODB_URI: sätt till Atlas-sträng eller mongodb://mongodb:27017 för container
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
 
+            echo "BROKER_GROUP_TOKEN=${{ secrets.BROKER_GROUP_TOKEN }}" >> .env
+            echo "BROKER_API_URL=${{ secrets.BROKER_API_URL }}" >> .env
+
             docker compose pull
             docker compose down
             docker compose up -d

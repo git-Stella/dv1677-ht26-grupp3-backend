@@ -6,6 +6,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete } from './methods/notify.js';
 import requireAuth from './middleware/auth.js';
+import bookingsForProj from "./db/bookingsForProj.mjs";
+import express from 'express';
+import { broker } from "./config/broker.js";
+import { createBooking } from "./broker-commands/createBooking.js";
+import { cancelBooking } from "./broker-commands/cancelBooking.js";
+import { ledigaTider } from "./domain/availability.js";
+import { test } from "vitest";
 //import { ObjectId } from 'mongodb';
 //import { connectDB } from './database.js';
 
@@ -154,5 +161,84 @@ router.post('/auth/login', async (req, res) => {
 // Skicka till alla i rummet INKLUSIVE avsändaren
 io.to(`doc:${dokumentId}`).emit('uppdatering', data)
 */
+router.get('/test/broker/who', async (req, res) => {
+    // Testing
+
+    const BASE = process.env.BROKER_API_URL;
+
+    const headers = {
+        'X-Booker-Group': process.env.BROKER_GROUP_TOKEN,
+        'Content-Type': 'application/json',
+    };
+
+    const result = await fetch(`${BASE}/whoami`, { headers });
+
+    const testing = await result.json();
+
+    console.log(testing);
+
+    return res.json(testing);
+});
+
+router.get('/test/broker/inventory/:id', async (req, res) => {
+    // Testing
+
+    const testResult = await broker.inventory(req.params.id);
+    console.log("testResult: ", testResult);
+
+    return res.json(testResult);
+});
+
+router.get('/test/broker/sync', async (req, res) => {
+    // Testing
+
+
+    return;
+});
+
+router.post('/test/broker/book', async (req, res, next) => {
+    try {
+        console.log(req.body);
+
+        const result = await createBooking(req, res);
+        return result;
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.post('/test/broker/cancel', async (req, res, next) => {
+    try {
+        console.log(req.body);
+
+        const result = await cancelBooking(req, res);
+        return result;
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.get('/test/broker/availability', async (req, res) => {
+    const bookingsList = await bookingsForProj.getAll();
+
+    const start = new Date();
+    start.setUTCHours(0,0,0,0);
+    const end = new Date();
+    end.setUTCHours(23,59,59,999);
+
+    const available = await ledigaTider(bookingsList, start, end);
+
+    return res.json(available);
+});
+
+router.get('/test/broker/user/:user', async (req, res) => {
+    // Testing
+
+    const user = req.params.user;
+
+    const result = await bookingsForProj.getUserBookings(user);
+
+    return res.json(result);
+});
 
 export default router;
