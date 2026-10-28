@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken';
 import { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete } from './methods/notify.js';
 import requireAuth from './middleware/auth.js';
 import bookingsForProj from "./db/bookingsForProj.mjs";
-import express from 'express';
 import { broker } from "./config/broker.js";
 import { createBooking } from "./broker-commands/createBooking.js";
 import { cancelBooking } from "./broker-commands/cancelBooking.js";
