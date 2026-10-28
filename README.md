@@ -10,7 +10,7 @@ Ett alternativt projekt – ett server-renderat bokningssystem för resurser
 # dv1677-ht26-grupp3-backend
 
 ## Gruppmedlemmar
-//y
+
 | Namn | GitHub |
 |------|--------|
 | Stella Karlsson | @git-Stella |
