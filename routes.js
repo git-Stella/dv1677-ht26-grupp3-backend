@@ -52,7 +52,7 @@ router.post('/resources', async (req, res) => {
 
 router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
-    const resourceBookings = await bookings.getByResource(req.params.id, req.body.user);
+    const resourceBookings = await bookings.getByResource(req.params.id);
     return res.json({bookings: resourceBookings, resources: resource})
     //return res.render("resource", { resource, bookings: resourceBookings });
 });
@@ -89,8 +89,8 @@ socket.on('booking:created', (b) => {
 })
   */
 
-router.get('/bookings/:id/:user', requireAuth, async (req, res) => {
-    const result = await bookings.getByResource(req.params.id, req.params.user);
+router.get('/bookings/:id', requireAuth, async (req, res) => {
+    const result = await bookings.getByResource(req.params.id);
     return res.json(result);
 })
 
@@ -153,7 +153,7 @@ router.post('/auth/login', async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '2h' }
     )
-    res.json({token: token, user: user[0].mail})
+    res.json({token: token, user: user[0]._id})
 })
 
 /*
