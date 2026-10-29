@@ -55,14 +55,12 @@ router.post('/resources', async (req, res) => {
 // RESOURCES + BOOKINGS FOR PROJ
 router.get('/resources/all', async (req, res) => {
     const resources = await resourcesForProj.getAll();
-    const result = resources.json(); 
-    return res.json(result);
+    return res.json(resources);
 });
 
 router.get('/booking/:user', requireAuth, async (req, res) => {
     const booking = await bookingsForProj.getUserBookings(req.params.user);
-    const result = booking.json(); 
-    return res.json(result);
+    return res.json(booking);
 });
 //
 
