@@ -9,8 +9,8 @@ const bookings = {
 
         return res;
     },
-    getByResource: async function getByResource(resourceId, userId) {
-        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10), user: userId }).sort({ start_time: -1 }).toArray();
+    getByResource: async function getByResource(resourceId) {
+        const res = await db.collection(dbNameResources).find({ resource_id: parseInt(resourceId, 10) }).sort({ start_time: -1 }).toArray();
 
         return res;
     },

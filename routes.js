@@ -68,7 +68,7 @@ router.get('/booking/:user', requireAuth, async (req, res) => {
 
 router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
-    const resourceBookings = await bookings.getByResource(req.params.id, req.body.user);
+    const resourceBookings = await bookings.getByResource(req.params.id);
     return res.json({bookings: resourceBookings, resources: resource})
     //return res.render("resource", { resource, bookings: resourceBookings });
 });
@@ -105,8 +105,8 @@ socket.on('booking:created', (b) => {
 })
   */
 
-router.get('/bookings/:id/:user', requireAuth, async (req, res) => {
-    const result = await bookings.getByResource(req.params.id, req.params.user);
+router.get('/bookings/:id', requireAuth, async (req, res) => {
+    const result = await bookings.getByResource(req.params.id);
     return res.json(result);
 })
 
@@ -157,7 +157,10 @@ router.post('/auth/register', async (req, res) => {
 
 router.post('/auth/login', async (req, res) => {
     //console.log(req.body.mail)
-    const user = await users.getOneByMail(req.body.mail)
+    let user = await users.getOneByMail(req.body.mail)
+    if (!user[0]) {
+        user = [{hash: "F"}]
+    }
     //console.log(req.body.password)
     //console.log(user)
     const ok = user && await bcrypt.compare(req.body.password, user[0].hash)
@@ -169,7 +172,7 @@ router.post('/auth/login', async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '2h' }
     )
-    res.json({token: token, user: user[0].mail})
+    res.json({token: token, user: user[0]._id})
 })
 
 /*
@@ -214,6 +217,7 @@ router.get('/test/broker/sync', async (req, res) => {
 router.post('/test/broker/book', requireAuth, async (req, res, next) => {
     try {
         const result = await createBooking(req, res);
+        notifyBook(result)
         return result;
     } catch (e) {
         next(e);
@@ -223,6 +227,7 @@ router.post('/test/broker/book', requireAuth, async (req, res, next) => {
 router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
         const result = await cancelBooking(req, res);
+        notifyDelete(result)
         return result;
     } catch (e) {
         next(e);
