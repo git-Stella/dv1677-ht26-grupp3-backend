@@ -16,6 +16,7 @@ const bookingsForProj = {
     },
     getUserBookings: async function getUserBookings(user) {
         const today = new Date();
+        console.log("User parameter:", JSON.stringify(user));
         const res = await db.collection(dbNameBookings).find({ bookedBy: user }, { projection: { "broker.secret": 0 } }).sort({ start_time: -1 }).toArray();
         const result = res.filter((booking) => new Date(booking.endsAt) > today && booking.status == "confirmed");
 
