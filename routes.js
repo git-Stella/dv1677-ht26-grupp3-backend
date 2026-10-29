@@ -59,8 +59,8 @@ router.get('/resources/all', async (req, res) => {
 });
 
 router.get('/booking/:user', requireAuth, async (req, res) => {
-    const booking = await bookingsForProj.getUserBookings(req.params.user);
-    return res.json(booking);
+    const userBooking = await bookingsForProj.getUserBookings(req.params.user);
+    return res.json(userBooking);
 });
 //
 
