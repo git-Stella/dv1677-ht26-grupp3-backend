@@ -195,10 +195,8 @@ router.get('/test/broker/sync', async (req, res) => {
     return;
 });
 
-router.post('/test/broker/book', async (req, res, next) => {
+router.post('/test/broker/book', requireAuth, async (req, res, next) => {
     try {
-        console.log(req.body);
-
         const result = await createBooking(req, res);
         return result;
     } catch (e) {
@@ -206,10 +204,8 @@ router.post('/test/broker/book', async (req, res, next) => {
     }
 });
 
-router.post('/test/broker/cancel', async (req, res, next) => {
+router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
-        console.log(req.body);
-
         const result = await cancelBooking(req, res);
         return result;
     } catch (e) {

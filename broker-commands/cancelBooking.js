@@ -9,6 +9,10 @@ export async function cancelBooking(req, res) {
   const booking = await db.collection('bookings').findOne({ "broker.secret": req.body.secret });
   if (!booking) return res.status(404).json({ error: 'Not found' });
 
+  // if (!booking.bookedBy == req.body.user) {
+  //   return res.status(404).json({ error: "User doesn't match database" });
+  // }
+
   const resource = await db.collection('resources').findOne({ _id: booking.resourceId });
 
   if (booking.broker?.secret) {
