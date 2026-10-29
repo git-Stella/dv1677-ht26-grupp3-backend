@@ -1,4 +1,4 @@
-import { db } from './db/database.mjs';
+import { db } from './database.mjs';
 import { BSON } from 'mongodb';
 
 const dbNameResources = process.env.COLLECTION_NAME_RESOURCES_PROJ || "resources";
