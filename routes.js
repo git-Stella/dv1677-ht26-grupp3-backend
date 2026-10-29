@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { notifyUpdate, notifyTest, notifyDiscord, notifyBook, notifyDelete } from './methods/notify.js';
 import requireAuth from './middleware/auth.js';
 import bookingsForProj from "./db/bookingsForProj.mjs";
+import resourcesForProj from "./db/resourcesForProj.mjs";
 import { broker } from "./config/broker.js";
 import { createBooking } from "./broker-commands/createBooking.js";
 import { cancelBooking } from "./broker-commands/cancelBooking.js";
@@ -49,6 +50,21 @@ router.post('/resources', async (req, res) => {
     return res.json({result: result});
     //return res.redirect('/api');
 });
+
+
+// RESOURCES + BOOKINGS FOR PROJ
+router.get('/resources/all', async (req, res) => {
+    const resources = await resourcesForProj.getAll();
+    const result = resources.json(); 
+    return res.json(result);
+});
+
+router.get('/booking/:user', requireAuth, async (req, res) => {
+    const booking = await bookingsForProj.getUserBookings(req.params.user);
+    const result = booking.json(); 
+    return res.json(result);
+});
+//
 
 router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
