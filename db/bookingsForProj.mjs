@@ -14,6 +14,11 @@ const bookingsForProj = {
 
         return res;
     },
+    getBySecret: async function getBySecret(secret) {
+        const res = await db.collection('bookings').findOne({ "broker.secret": secret });
+
+        return res;
+    },
     getUserBookings: async function getUserBookings(user) {
         const today = new Date();
         console.log("User parameter:", JSON.stringify(user));
