@@ -108,7 +108,7 @@ router.get('/bookings/:id', requireAuth, async (req, res) => {
 router.delete('/bookings/:id', requireAuth, async (req, res) => {
     const data = await bookings.deleteOne(req.params.id, req.body.user);
 
-    notifyDelete(req.body);
+    notifyDelete();
     return res.json(data);
 });
 
@@ -219,7 +219,7 @@ router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
         const newBooking = await bookingsForProj.getBookingById(req.body.secret);
         const result = await cancelBooking(newBooking[0].broker.secret, req.body.user, res);
-        notifyDelete(newBooking[0]._id);
+        notifyDelete();
         return result;
     } catch (e) {
         next(e);
