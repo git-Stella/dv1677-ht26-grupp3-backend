@@ -218,7 +218,7 @@ router.post('/test/broker/book', requireAuth, async (req, res, next) => {
 router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
         const newBooking = await bookingsForProj.getBookingById(req.body.secret);
-        const result = await cancelBooking(newBooking[0].broker.secret, res);
+        const result = await cancelBooking(newBooking[0].broker.secret, req.body.user, res);
         notifyDelete(newBooking[0]._id);
         return result;
     } catch (e) {
