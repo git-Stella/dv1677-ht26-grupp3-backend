@@ -61,8 +61,8 @@ jobs:
 
             echo "BROKER_GROUP_TOKEN=${{ secrets.BROKER_GROUP_TOKEN }}" >> .env
             echo "BROKER_API_URL=${{ secrets.BROKER_API_URL }}" >> .env
-            echo "JWT_SECRET={{ secrets.JWT_SECRET }}" >> .env
-            echo "DISCORD_WEBHOOK_URL={{ secrets.DISCORD_WEBHOOK_URL }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}" >> .env
 
             docker compose pull
             docker compose down
