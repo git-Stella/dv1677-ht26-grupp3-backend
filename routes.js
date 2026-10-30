@@ -207,7 +207,7 @@ router.post('/test/broker/book', requireAuth, async (req, res, next) => {
 router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
         const result = await cancelBooking(req, res);
-        const booking = await db.collection('bookings').findOne({ "broker.secret": req.body.secret });
+        const booking = await bookingsForProj.getBySecret(req.body.secret);
         notifyDelete(booking[0]);
         return result;
     } catch (e) {
