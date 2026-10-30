@@ -1,5 +1,4 @@
 async function notifyDiscord(meddelande) {
-    //console.log(meddelande)
     await fetch(process.env.DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -9,7 +8,7 @@ async function notifyDiscord(meddelande) {
 
 async function notifyUpdate(data) {
     try {
-        await notifyDiscord(`Bokning uppdaterad: ${data.resourceId}`)
+        await notifyDiscord(`Bokning uppdaterad: ${data[0].resourceId}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
@@ -18,7 +17,7 @@ async function notifyUpdate(data) {
 
 async function notifyBook(data) {
     try {
-        await notifyDiscord(`Bokning genomförd: ${data.resourceId}`)
+        await notifyDiscord(`Bokning genomförd: ${data[0].resourceId}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
@@ -27,7 +26,7 @@ async function notifyBook(data) {
 
 async function notifyDelete(data) {
     try {
-        await notifyDiscord(`Bokning avslutad: ${data.resourceId}`)
+        await notifyDiscord(`Bokning avslutad: ${data[0].resourceId}`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
