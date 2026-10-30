@@ -24,9 +24,9 @@ async function notifyBook(data) {
     }
 }
 
-async function notifyDelete(data) {
+async function notifyDelete() {
     try {
-        await notifyDiscord(`Bokning avslutad: ${data.resourceId}`)
+        await notifyDiscord(`Bokning avslutad`)
     }
     catch (error) {
         console.error('Notifiering misslyckades:', error.message)
