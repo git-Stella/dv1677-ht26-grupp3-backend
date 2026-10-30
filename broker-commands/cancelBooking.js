@@ -2,16 +2,16 @@ import { ObjectId } from "mongodb";
 import { getClient } from "../db/database.mjs";
 import { broker, BrokerError } from "../config/broker.js";
 
-export async function cancelBooking(secret, res) {
+export async function cancelBooking(secret, user, res) {
   const client = await getClient();
   const db = client.db(process.env.DATABASE_NAME);
 
   const booking = await db.collection('bookings').findOne({ "broker.secret": secret });
   if (!booking) return res.status(404).json({ error: 'Not found' });
 
-  // if (!booking.bookedBy == req.body.user) {
-  //   return res.status(404).json({ error: "User doesn't match database" });
-  // }
+  if (!booking.bookedBy == user) {
+    return res.status(404).json({ error: "User doesn't match database" });
+  }
 
   const resource = await db.collection('resources').findOne({ _id: booking.resourceId });
 
