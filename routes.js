@@ -205,16 +205,10 @@ router.get('/test/broker/inventory/:id', async (req, res) => {
     return res.json(testResult);
 });
 
-router.get('/test/broker/sync', async (req, res) => {
-    // Testing
-
-
-    return;
-});
-
 router.post('/test/broker/book', requireAuth, async (req, res, next) => {
     try {
         const result = await createBooking(req, res);
+        console.log(result);
         notifyBook(result)
         return result;
     } catch (e) {
