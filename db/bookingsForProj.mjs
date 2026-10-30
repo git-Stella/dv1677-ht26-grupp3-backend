@@ -28,7 +28,8 @@ const bookingsForProj = {
         return result;
     },
     getBookingById: async function getBookingById(id) {
-        const res = await db.collection(dbNameBookings).find({ _id: new BSON.ObjectId(id) }).toArray();
+        const nid = new BSON.ObjectId(id);
+        const res = await db.collection(dbNameBookings).find({ _id: nid }).toArray();
 
         return res;
     },

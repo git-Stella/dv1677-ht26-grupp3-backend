@@ -204,20 +204,20 @@ router.post('/test/broker/book', requireAuth, async (req, res, next) => {
     }
 });
 
-router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
-    try {
-        const result = await cancelBooking(req, res);
-        const booking = await bookingsForProj.getBySecret(req.body.secret);
-        notifyDelete(booking[0]);
-        return result;
-    } catch (e) {
-        next(e);
-    }
-});
+// router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
+//     try {
+//         const result = await cancelBooking(req, res);
+//         const booking = await bookingsForProj.getBySecret(req.body.secret);
+//         notifyDelete(booking[0]);
+//         return result;
+//     } catch (e) {
+//         next(e);
+//     }
+// });
 
 router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
-        const newBooking = await bookingsForProj.getBookingById(req.body._id);
+        const newBooking = await bookingsForProj.getBookingById(req.body.secret);
         const result = await cancelBooking(newBooking[0].broker.secret, res);
         notifyDelete(newBooking[0]._id);
         return result;
