@@ -215,6 +215,17 @@ router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     }
 });
 
+router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
+    try {
+        const newBooking = await bookingsForProj.getBookingById(req.body._id);
+        const result = await cancelBooking(newBooking[0].broker.secret, res);
+        notifyDelete(newBooking[0]._id);
+        return result;
+    } catch (e) {
+        next(e);
+    }
+});
+
 router.get('/test/broker/availability', async (req, res) => {
     const bookingsList = await bookingsForProj.getAll();
 
