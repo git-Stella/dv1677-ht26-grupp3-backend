@@ -48,7 +48,6 @@ router.get('/info', async (req, res) => {
 router.post('/resources', async (req, res) => {
     const result = await resources.addOne(req.body);
     return res.json({result: result});
-    //return res.redirect('/api');
 });
 
 
@@ -68,13 +67,11 @@ router.get('/resources/:id', requireAuth, async (req, res) => {
     const resource = await resources.getOne(req.params.id);
     const resourceBookings = await bookings.getByResource(req.params.id);
     return res.json({bookings: resourceBookings, resources: resource})
-    //return res.render("resource", { resource, bookings: resourceBookings });
 });
 
 router.delete('/resources/:id', async (req, res) => {
     const result = await resources.deleteOne(req.params.id);
     return res.json({result: result});
-    //return res.redirect('/api');
 });
 
 router.put('/resources', async (req, res) => {
@@ -92,7 +89,7 @@ router.post('/bookings', requireAuth, async (req, res) => {
         ...data
     })
 
-    notifyBook(data);
+    notifyBook(req.body);
     return res.json({result: data});
 });
 
@@ -111,14 +108,14 @@ router.get('/bookings/:id', requireAuth, async (req, res) => {
 router.delete('/bookings/:id', requireAuth, async (req, res) => {
     const data = await bookings.deleteOne(req.params.id, req.body.user);
 
-    notifyDelete(data);
+    notifyDelete(req.body);
     return res.json(data);
 });
 
 router.put('/bookings', requireAuth, async (req, res) => {
     const data = await bookings.updateOne(req.body);
 
-    notifyUpdate(data);
+    notifyUpdate(req.body);
     return res.json({result: data});
 });
 
@@ -136,31 +133,25 @@ router.get('/test/notify', requireAuth, async (req, res) => {
 })
 
 router.post('/auth/register', async (req, res) => {
-    //console.log(req.body.password)
     const hash = await bcrypt.hash(req.body.password, 10)
-    //await db.collection('users').insertOne({ email, password: hash })
     const data = {
         hash: hash,
         mail: req.body.mail
     }
-    //console.log(data)
     const exists = await users.getOneByMail(req.body.mail)
     if (exists.length != 0) {
         return res.json({status: "unable to create"})
     }
     const user = await users.addOne(data)
-    //console.log(user);
     return res.json({status: "created"})
 })
 
 router.post('/auth/login', async (req, res) => {
-    //console.log(req.body.mail)
     let user = await users.getOneByMail(req.body.mail)
     if (!user[0]) {
         user = [{hash: "F"}]
     }
-    //console.log(req.body.password)
-    //console.log(user)
+
     const ok = user && await bcrypt.compare(req.body.password, user[0].hash)
     if (!ok) {
         return res.status(401).json({ error: 'Incorrect mail or password' })
@@ -197,8 +188,6 @@ router.get('/test/broker/who', async (req, res) => {
 });
 
 router.get('/test/broker/inventory/:id', async (req, res) => {
-    // Testing
-
     const testResult = await broker.inventory(req.params.id);
     console.log("testResult: ", testResult);
 
@@ -218,7 +207,7 @@ router.post('/test/broker/book', requireAuth, async (req, res, next) => {
 router.post('/test/broker/cancel', requireAuth, async (req, res, next) => {
     try {
         const result = await cancelBooking(req, res);
-        notifyDelete(result)
+        notifyDelete(req.body)
         return result;
     } catch (e) {
         next(e);
@@ -239,8 +228,6 @@ router.get('/test/broker/availability', async (req, res) => {
 });
 
 router.get('/test/broker/user/:user', async (req, res) => {
-    // Testing
-
     const user = req.params.user;
 
     const result = await bookingsForProj.getUserBookings(user);
