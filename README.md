@@ -43,7 +43,7 @@ Motivering: Vi valde frontend-ramverket "React", då vi båda har haft mer erfar
 
 git clone <repo-url>
 cd dv1677-ht26-grupp3-backend
-cp .env.example .env
+cp .env.example .env (lägg till env variabler)
 npm install
 npm start
 
@@ -51,11 +51,16 @@ npm start
 
 | Variabel | Beskrivning |
 |----------|-------------|
-| MONGODB_URI | Anslutningssträng till MongoDB |
+| MONGODB_URI | Anslutningssträng till MongoDB atlas |
 | DATABASE_NAME | Namnet på databasen som MongoDB använder |
 | COLLECTION_NAME_BOOKINGS | Namnet på collection:en som tillhör "bookings" |
 | COLLECTION_NAME_RESOURCES | Namnet på collection:en som tillhör "resources" |
+| COLLECTION_NAME_USERS | Namnet på collection:en som tillhör "users" |
 | PORT | Port (default 3000) |
+| BROKER_API_URL | Broker url utan avslutande / |
+| BROKER_GROUP_TOKEN | Unik broker token för gruppen |
+| JWT_SECRET | Unik JWT secret som gruppen genererat |
+| DISCORD_WEBHOOK_URL | URL till webhook för discord bot |
 
 ## Tester
 
