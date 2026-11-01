@@ -73,6 +73,9 @@ npm test
 - [SQLite](https://www.sqlite.org) (byts ut mot MongoDB)
 - [EJS](https://ejs.co) (byts ut mot frontend-ramverk)
 
+## Broker
+Genom en virtual machine som vi fått tillgång till av BTH så kan vi från den med hjälp av broker token unik för den VMen (till exempel Worf i vårat fall) begära åtkomst till informationen i brokern. Måste göras från VM med korrekt broker group token för den VM.
+
 ## Tillvägagångssätt
 
 Dokumentera löpande vad ni gjort och hur ni löst problem.
