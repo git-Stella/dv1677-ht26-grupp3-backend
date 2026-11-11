@@ -43,8 +43,9 @@ Motivering: Vi valde frontend-ramverket "React", då vi båda har haft mer erfar
 
 git clone <repo-url>
 cd dv1677-ht26-grupp3-backend
-cp .env.example .env (lägg till env variabler)
+cp .env.example .env (fyll i värden till vad ni har)
 npm install
+npm audit fix (rekomenderas)
 npm start
 
 **Miljövariabler** (se .env.example):
@@ -63,8 +64,11 @@ npm start
 | DISCORD_WEBHOOK_URL | URL till webhook för discord bot |
 
 ## Tester
-
 npm test
+GET route på /api (visar alla resources) testas för att se om du kan få en överblick på alla resources som finns.
+POST route på /api/resources för att se till att det går att lägga till nya resources.
+DELETE route på /api/resources/:id för att kunna visa att det går att ta bort en specifik resource.
+Dessa tester visar att bas funktionalitet för att api interagerar med databasen fungerar vilket är en viktig bas för projektet.
 
 ## Teknikstack
 
@@ -73,8 +77,9 @@ npm test
 - [SQLite](https://www.sqlite.org) (byts ut mot MongoDB)
 - [EJS](https://ejs.co) (byts ut mot frontend-ramverk)
 
-## Broker
-Genom en virtual machine som vi fått tillgång till av BTH så kan vi från den med hjälp av broker token unik för den VMen (till exempel Worf i vårat fall) begära åtkomst till informationen i brokern. Måste göras från VM med korrekt broker group token för den VM.
+## Länk till api och frontend
+https://dv1677-worf.nplab.bth.se/api
+https://andidupa.github.io/dv1677-ht26-grupp3-frontend/
 
 ## Tillvägagångssätt
 
@@ -82,5 +87,6 @@ Dokumentera löpande vad ni gjort och hur ni löst problem.
 
 - **Vecka 1:** Inlämningen för vecka utfördes genom att gruppmedlemmarna samlades under programmeringsstugan och diskuterade project- samt teknikval (frontend-ramverk), skapade ett gemensamt repo och bjöd med läraren, samt gick igenom stegen för säkerhetsgranskning, verifierade att uppdatering av befintligt innehåll fungerade korrekt, och slutligen skapade ett öppet pull request.
 
-- **Vecka 2:** ...
-- **Vecka 3:** ...
+- **Vecka 5:** Det har varit större problem under denna perioden på grund av en del teknik fel och mycket felsökande har gjorts men det har lett till bra resultat endå, trots lite försenat mot våra planer. Vi använder oss av atlas för våran mongodb databas och vi har nyttjat oss av mongo memory server för testerna.
+
+- **Vecka x:** ...
