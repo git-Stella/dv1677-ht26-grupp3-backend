@@ -9,6 +9,10 @@ import resources from "./resources.mjs";
 dotenv.config()
 
 const app = express();
+app.use((req, res, next) => {
+  req.io = app.get('io');
+  next();
+});
 app.use(express.json());
 app.use(cors());
 app.use('/api', routes);

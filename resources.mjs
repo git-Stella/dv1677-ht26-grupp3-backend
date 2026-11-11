@@ -40,6 +40,19 @@ const resources = {
         //const res = await db.collection(dbNameResources).deleteOne({ _id: nid }).toArray();
         const res = await db.collection(dbNameResources).deleteOne({ name: id });
         return { changes: res.deletedCount };
+    },
+    updateOne: async function updateOne(body) {
+        const filter = { _id: body._id };
+        const updateResource = {
+            $set: {
+                name: body.name,
+                type: body.type,
+                description: body.description,
+                capacity: Number(body.capacity)
+            },
+        };
+        const res = await db.collection(dbNameResources).updateOne(filter, updateResource)
+        return res;
     }
 };
 

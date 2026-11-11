@@ -3,8 +3,7 @@
 Starter-repo för DV1677 JavaScript-baserade webbramverk HT26.
 
 Ett alternativt projekt – ett server-renderat bokningssystem för resurser
-(t.ex. virtuella maskiner i Proxmox), byggt med Express och SQLite. Under
-kursens gång byggs det om/refaktoreras.
+(t.ex. virtuella maskiner i Proxmox), byggt med Express och MongoDB via en atlas server. Frontend byggs i separat repo med react.
 
 ---
 
@@ -53,11 +52,16 @@ npm start
 
 | Variabel | Beskrivning |
 |----------|-------------|
-| MONGODB_URI | Anslutningssträng till MongoDB |
+| MONGODB_URI | Anslutningssträng till MongoDB atlas |
 | DATABASE_NAME | Namnet på databasen som MongoDB använder |
 | COLLECTION_NAME_BOOKINGS | Namnet på collection:en som tillhör "bookings" |
 | COLLECTION_NAME_RESOURCES | Namnet på collection:en som tillhör "resources" |
+| COLLECTION_NAME_USERS | Namnet på collection:en som tillhör "users" |
 | PORT | Port (default 3000) |
+| BROKER_API_URL | Broker url utan avslutande / |
+| BROKER_GROUP_TOKEN | Unik broker token för gruppen |
+| JWT_SECRET | Unik JWT secret som gruppen genererat |
+| DISCORD_WEBHOOK_URL | URL till webhook för discord bot |
 
 ## Tester
 npm test
